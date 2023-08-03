@@ -1,6 +1,8 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using IdentityServer4.Models;
+
 namespace IdentityServer.Quickstart.Home;
 
 using System.Threading.Tasks;
@@ -45,7 +47,7 @@ public class HomeController : Controller
         var vm = new ErrorViewModel();
 
         // retrieve error details from identityserver
-        var message = await _interaction.GetErrorContextAsync(errorId);
+        ErrorMessage message = await _interaction.GetErrorContextAsync(errorId);
         if (message != null)
         {
             vm.Error = message;

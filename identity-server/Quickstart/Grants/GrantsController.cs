@@ -1,6 +1,8 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using IdentityServer4.Models;
+
 namespace IdentityServer.Quickstart.Grants;
 
 using System.Collections.Generic;
@@ -63,12 +65,12 @@ public class GrantsController : Controller
         var grants = await _interaction.GetAllUserGrantsAsync();
 
         var list = new List<GrantViewModel>();
-        foreach (var grant in grants)
+        foreach (Grant grant in grants)
         {
-            var client = await _clients.FindClientByIdAsync(grant.ClientId);
+            Client client = await _clients.FindClientByIdAsync(grant.ClientId);
             if (client != null)
             {
-                var resources = await _resources.FindResourcesByScopeAsync(grant.Scopes);
+                Resources resources = await _resources.FindResourcesByScopeAsync(grant.Scopes);
 
                 var item = new GrantViewModel
                 {

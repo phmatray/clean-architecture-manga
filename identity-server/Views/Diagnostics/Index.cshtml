@@ -1,3 +1,4 @@
+@using System.Security.Claims
 @model IdentityServer.Quickstart.Diagnostics.DiagnosticsViewModel
 
 <div class="diagnostics-page">
@@ -13,7 +14,7 @@
                 </div>
                 <div class="card-body">
                     <dl>
-                        @foreach (var claim in Model.AuthenticateResult.Principal.Claims)
+                        @foreach (Claim claim in Model.AuthenticateResult.Principal.Claims)
                         {
                             <dt>@claim.Type</dt>
                             <dd>@claim.Value</dd>
@@ -40,7 +41,7 @@
                             <dt>Clients</dt>
                             <dd>
                                 @{
-                                    var clients = Model.Clients.ToArray();
+                                    string[] clients = Model.Clients.ToArray();
                                     for (var i = 0; i < clients.Length; i++)
                                     {
                                         <text>@clients[i]</text>

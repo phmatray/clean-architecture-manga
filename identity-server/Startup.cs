@@ -26,7 +26,7 @@ public class Startup
     {
         services.AddControllersWithViews();
 
-        var builder = services.AddIdentityServer(options =>
+        IIdentityServerBuilder builder = services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;

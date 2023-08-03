@@ -1,3 +1,4 @@
+@using IdentityServer.Quickstart.Account
 @model IdentityServer.Quickstart.Account.LoginViewModel
 
 <div class="login-page">
@@ -58,7 +59,7 @@
                     </div>
                     <div class="card-body">
                         <ul class="list-inline">
-                            @foreach (var provider in Model.VisibleExternalProviders)
+                            @foreach (ExternalProvider provider in Model.VisibleExternalProviders)
                             {
                                 <li class="list-inline-item">
                                     <a class="btn btn-secondary"

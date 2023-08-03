@@ -45,7 +45,7 @@ public class ConsentController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(string returnUrl)
     {
-        var vm = await BuildViewModelAsync(returnUrl);
+        ConsentViewModel vm = await BuildViewModelAsync(returnUrl);
         if (vm != null) return View("Index", vm);
 
         return View("Error");
@@ -58,11 +58,11 @@ public class ConsentController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index(ConsentInputModel model)
     {
-        var result = await ProcessConsent(model);
+        ProcessConsentResult result = await ProcessConsent(model);
 
         if (result.IsRedirect)
         {
-            var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+            AuthorizationRequest context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
             if (context?.IsNativeClient() == true)
                 // The client is native, so this change in how to
                 // return the response is for better UX for the end user.
@@ -86,7 +86,7 @@ public class ConsentController : Controller
         var result = new ProcessConsentResult();
 
         // validate return url is still valid
-        var request = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+        AuthorizationRequest request = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
         if (request == null) return result;
 
         ConsentResponse grantedConsent = null;
@@ -152,7 +152,7 @@ public class ConsentController : Controller
 
     private async Task<ConsentViewModel> BuildViewModelAsync(string returnUrl, ConsentInputModel model = null)
     {
-        var request = await _interaction.GetAuthorizationContextAsync(returnUrl);
+        AuthorizationRequest request = await _interaction.GetAuthorizationContextAsync(returnUrl);
         if (request != null) return CreateConsentViewModel(model, returnUrl, request);
 
         _logger.LogError("No consent request matching request: {0}", returnUrl);
@@ -180,12 +180,12 @@ public class ConsentController : Controller
             CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
 
         var apiScopes = new List<ScopeViewModel>();
-        foreach (var parsedScope in request.ValidatedResources.ParsedScopes)
+        foreach (ParsedScopeValue parsedScope in request.ValidatedResources.ParsedScopes)
         {
-            var apiScope = request.ValidatedResources.Resources.FindApiScope(parsedScope.ParsedName);
+            ApiScope apiScope = request.ValidatedResources.Resources.FindApiScope(parsedScope.ParsedName);
             if (apiScope != null)
             {
-                var scopeVm = CreateScopeViewModel(parsedScope, apiScope,
+                ScopeViewModel scopeVm = CreateScopeViewModel(parsedScope, apiScope,
                     vm.ScopesConsented.Contains(parsedScope.RawValue) || model == null);
                 apiScopes.Add(scopeVm);
             }
@@ -216,7 +216,7 @@ public class ConsentController : Controller
 
     public ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
     {
-        var displayName = apiScope.DisplayName ?? apiScope.Name;
+        string displayName = apiScope.DisplayName ?? apiScope.Name;
         if (!string.IsNullOrWhiteSpace(parsedScopeValue.ParsedParameter))
             displayName += ":" + parsedScopeValue.ParsedParameter;
 

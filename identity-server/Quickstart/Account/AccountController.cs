@@ -60,7 +60,7 @@ public class AccountController : Controller
     public async Task<IActionResult> Login(string returnUrl)
     {
         // build a model so we know what to show on the login page
-        var vm = await BuildLoginViewModelAsync(returnUrl);
+        LoginViewModel vm = await BuildLoginViewModelAsync(returnUrl);
 
         if (vm.IsExternalLoginOnly)
             // we only have one option for logging in and it's an external provider
@@ -77,7 +77,7 @@ public class AccountController : Controller
     public async Task<IActionResult> Login(LoginInputModel model, string button)
     {
         // check if we are in the context of an authorization request
-        var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+        AuthorizationRequest context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
 
         // the user clicked the "cancel" button
         if (button != "login")
@@ -107,7 +107,7 @@ public class AccountController : Controller
             // validate username/password against in-memory store
             if (_users.ValidateCredentials(model.Username, model.Password))
             {
-                var user = _users.FindByUsername(model.Username);
+                TestUser user = _users.FindByUsername(model.Username);
                 await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId,
                     user.Username, clientId: context?.Client.ClientId));
 
@@ -154,7 +154,7 @@ public class AccountController : Controller
         }
 
         // something went wrong, show form with error
-        var vm = await BuildLoginViewModelAsync(model);
+        LoginViewModel vm = await BuildLoginViewModelAsync(model);
         return View(vm);
     }
 
@@ -166,7 +166,7 @@ public class AccountController : Controller
     public async Task<IActionResult> Logout(string logoutId)
     {
         // build a model so the logout page knows what to display
-        var vm = await BuildLogoutViewModelAsync(logoutId);
+        LogoutViewModel vm = await BuildLogoutViewModelAsync(logoutId);
 
         if (vm.ShowLogoutPrompt == false)
             // if the request for logout was properly authenticated from IdentityServer, then
@@ -184,7 +184,7 @@ public class AccountController : Controller
     public async Task<IActionResult> Logout(LogoutInputModel model)
     {
         // build a model so the logged out page knows what to display
-        var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
+        LoggedOutViewModel vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
 
         if (User?.Identity.IsAuthenticated == true)
         {
@@ -202,7 +202,7 @@ public class AccountController : Controller
             // build a return URL so the upstream provider will redirect back
             // to us after the user has logged out. this allows us to then
             // complete our single sign-out processing.
-            var url = Url.Action("Logout", new { logoutId = vm.LogoutId });
+            string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
 
             // this triggers a redirect to the external provider for sign-out
             return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
@@ -223,10 +223,10 @@ public class AccountController : Controller
     /*****************************************/
     private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
     {
-        var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
+        AuthorizationRequest context = await _interaction.GetAuthorizationContextAsync(returnUrl);
         if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
         {
-            var local = context.IdP == IdentityServerConstants.LocalIdentityProvider;
+            bool local = context.IdP == IdentityServerConstants.LocalIdentityProvider;
 
             // this is meant to short circuit the UI and only trigger the one external IdP
             var vm = new LoginViewModel
@@ -254,7 +254,7 @@ public class AccountController : Controller
         var allowLocal = true;
         if (context?.Client.ClientId != null)
         {
-            var client = await _clientStore.FindEnabledClientByIdAsync(context.Client.ClientId);
+            Client client = await _clientStore.FindEnabledClientByIdAsync(context.Client.ClientId);
             if (client != null)
             {
                 allowLocal = client.EnableLocalLogin;
@@ -277,7 +277,7 @@ public class AccountController : Controller
 
     private async Task<LoginViewModel> BuildLoginViewModelAsync(LoginInputModel model)
     {
-        var vm = await BuildLoginViewModelAsync(model.ReturnUrl);
+        LoginViewModel vm = await BuildLoginViewModelAsync(model.ReturnUrl);
         vm.Username = model.Username;
         vm.RememberLogin = model.RememberLogin;
         return vm;
@@ -295,7 +295,7 @@ public class AccountController : Controller
             return vm;
         }
 
-        var context = await _interaction.GetLogoutContextAsync(logoutId);
+        LogoutRequest context = await _interaction.GetLogoutContextAsync(logoutId);
         if (context?.ShowSignoutPrompt == false)
         {
             // it's safe to automatically sign-out
@@ -311,7 +311,7 @@ public class AccountController : Controller
     private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
     {
         // get context information (client name, post logout redirect URI and iframe for federated signout)
-        var logout = await _interaction.GetLogoutContextAsync(logoutId);
+        LogoutRequest logout = await _interaction.GetLogoutContextAsync(logoutId);
 
         var vm = new LoggedOutViewModel
         {
@@ -324,10 +324,10 @@ public class AccountController : Controller
 
         if (User?.Identity.IsAuthenticated == true)
         {
-            var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
+            string idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
             if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider)
             {
-                var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
+                bool providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
                 if (providerSupportsSignout)
                 {
                     if (vm.LogoutId == null)

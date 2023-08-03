@@ -11,7 +11,7 @@ public sealed class StandardFixture : IDisposable
         const string connectionString =
             "Server=localhost;User Id=sa;Password=<YourStrong!Passw0rd>;Database=Accounts;";
 
-        DbContextOptions<MangaContext> options = new DbContextOptionsBuilder<MangaContext>()
+        var options = new DbContextOptionsBuilder<MangaContext>()
             .UseSqlServer(connectionString)
             .Options;
 

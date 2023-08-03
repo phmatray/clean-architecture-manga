@@ -30,8 +30,8 @@ public static class ReverseProxyExtensions
     /// </summary>
     public static IApplicationBuilder UseProxy(this IApplicationBuilder app, IConfiguration configuration)
     {
-        var identityServerOrigin = configuration["IDENTITY_SERVER_ORIGIN"];
-        var basePath = configuration["ASPNETCORE_BASEPATH"];
+        string identityServerOrigin = configuration["IDENTITY_SERVER_ORIGIN"];
+        string basePath = configuration["ASPNETCORE_BASEPATH"];
 
         if (!string.IsNullOrEmpty(identityServerOrigin))
             app.Use(async (context, next) =>

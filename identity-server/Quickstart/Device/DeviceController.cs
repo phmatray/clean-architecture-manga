@@ -45,11 +45,11 @@ public class DeviceController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var userCodeParamName = _options.Value.UserInteraction.DeviceVerificationUserCodeParameter;
+        string userCodeParamName = _options.Value.UserInteraction.DeviceVerificationUserCodeParameter;
         string userCode = Request.Query[userCodeParamName];
         if (string.IsNullOrWhiteSpace(userCode)) return View("UserCodeCapture");
 
-        var vm = await BuildViewModelAsync(userCode);
+        DeviceAuthorizationViewModel vm = await BuildViewModelAsync(userCode);
         if (vm == null) return View("Error");
 
         vm.ConfirmUserCode = true;
@@ -60,7 +60,7 @@ public class DeviceController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UserCodeCapture(string userCode)
     {
-        var vm = await BuildViewModelAsync(userCode);
+        DeviceAuthorizationViewModel vm = await BuildViewModelAsync(userCode);
         if (vm == null) return View("Error");
 
         return View("UserCodeConfirmation", vm);
@@ -72,7 +72,7 @@ public class DeviceController : Controller
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
 
-        var result = await ProcessConsent(model);
+        ProcessConsentResult result = await ProcessConsent(model);
         if (result.HasValidationError) return View("Error");
 
         return View("Success");
@@ -82,7 +82,7 @@ public class DeviceController : Controller
     {
         var result = new ProcessConsentResult();
 
-        var request =
+        DeviceFlowAuthorizationRequest request =
             await _interaction.GetAuthorizationContextAsync(model.UserCode);
         if (request == null) return result;
 
@@ -150,7 +150,7 @@ public class DeviceController : Controller
     private async Task<DeviceAuthorizationViewModel> BuildViewModelAsync(string userCode,
         DeviceAuthorizationInputModel model = null)
     {
-        var request = await _interaction.GetAuthorizationContextAsync(userCode);
+        DeviceFlowAuthorizationRequest request = await _interaction.GetAuthorizationContextAsync(userCode);
         if (request != null) return CreateConsentViewModel(userCode, model, request);
 
         return null;
@@ -175,12 +175,12 @@ public class DeviceController : Controller
             CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
 
         var apiScopes = new List<ScopeViewModel>();
-        foreach (var parsedScope in request.ValidatedResources.ParsedScopes)
+        foreach (ParsedScopeValue parsedScope in request.ValidatedResources.ParsedScopes)
         {
-            var apiScope = request.ValidatedResources.Resources.FindApiScope(parsedScope.ParsedName);
+            ApiScope apiScope = request.ValidatedResources.Resources.FindApiScope(parsedScope.ParsedName);
             if (apiScope != null)
             {
-                var scopeVm = CreateScopeViewModel(parsedScope, apiScope,
+                ScopeViewModel scopeVm = CreateScopeViewModel(parsedScope, apiScope,
                     vm.ScopesConsented.Contains(parsedScope.RawValue) || model == null);
                 apiScopes.Add(scopeVm);
             }
