@@ -24,22 +24,14 @@ using Modules.Common.FeatureFlags;
 [FeatureGate(CustomFeature.CloseAccount)]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public sealed class AccountsController : ControllerBase, IOutputPort
+public sealed class AccountsController(ICloseAccountUseCase useCase, Notification notification)
+    : ControllerBase, IOutputPort
 {
-    private readonly Notification _notification;
-    private readonly ICloseAccountUseCase _useCase;
-
     private IActionResult _viewModel;
-
-    public AccountsController(ICloseAccountUseCase useCase, Notification notification)
-    {
-        _useCase = useCase;
-        _notification = notification;
-    }
 
     void IOutputPort.Invalid()
     {
-        var problemDetails = new ValidationProblemDetails(_notification.ModelState);
+        var problemDetails = new ValidationProblemDetails(notification.ModelState);
         _viewModel = BadRequest(problemDetails);
     }
 
@@ -64,9 +56,9 @@ public sealed class AccountsController : ControllerBase, IOutputPort
     public async Task<IActionResult> Close(
         [FromRoute][Required] Guid accountId)
     {
-        _useCase.SetOutputPort(this);
+        useCase.SetOutputPort(this);
 
-        await _useCase.Execute(accountId)
+        await useCase.Execute(accountId)
             .ConfigureAwait(false);
 
         return _viewModel!;

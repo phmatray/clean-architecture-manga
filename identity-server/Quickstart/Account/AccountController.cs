@@ -90,12 +90,11 @@ public class AccountController : Controller
                 await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
 
                 // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
-                if (context.IsNativeClient())
+                return context.IsNativeClient()
                     // The client is native, so this change in how to
                     // return the response is for better UX for the end user.
-                    return this.LoadingPage("Redirect", model.ReturnUrl);
-
-                return Redirect(model.ReturnUrl);
+                    ? this.LoadingPage("Redirect", model.ReturnUrl)
+                    : Redirect(model.ReturnUrl);
             }
 
             // since we don't have a valid context, then we just go back to the home page
@@ -330,12 +329,10 @@ public class AccountController : Controller
                 bool providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
                 if (providerSupportsSignout)
                 {
-                    if (vm.LogoutId == null)
-                        // if there's no current logout context, we need to create one
-                        // this captures necessary info from the current logged in user
-                        // before we signout and redirect away to the external IdP for signout
-                        vm.LogoutId = await _interaction.CreateLogoutContextAsync();
-
+                    // if there's no current logout context, we need to create one
+                    // this captures necessary info from the current logged in user
+                    // before we signout and redirect away to the external IdP for signout
+                    vm.LogoutId ??= await _interaction.CreateLogoutContextAsync();
                     vm.ExternalAuthenticationScheme = idp;
                 }
             }

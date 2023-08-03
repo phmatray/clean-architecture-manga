@@ -2,18 +2,18 @@
 // Copyright © Ivan Paulovich. All rights reserved.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
+
 namespace Infrastructure.DataAccess;
 
 using System;
 using System.Threading.Tasks;
 using Application.Services;
 
-public sealed class UnitOfWork : IUnitOfWork, IDisposable
+public sealed class UnitOfWork(DbContext context)
+    : IUnitOfWork, IDisposable
 {
-    private readonly MangaContext _context;
     private bool _disposed;
-
-    public UnitOfWork(MangaContext context) => _context = context;
 
     /// <inheritdoc />
     public void Dispose() => Dispose(true);
@@ -21,7 +21,7 @@ public sealed class UnitOfWork : IUnitOfWork, IDisposable
     /// <inheritdoc />
     public async Task<int> Save()
     {
-        int affectedRows = await _context
+        int affectedRows = await context
             .SaveChangesAsync()
             .ConfigureAwait(false);
         return affectedRows;
@@ -31,7 +31,7 @@ public sealed class UnitOfWork : IUnitOfWork, IDisposable
     {
         if (!_disposed && disposing)
         {
-            _context.Dispose();
+            context.Dispose();
         }
 
         _disposed = true;

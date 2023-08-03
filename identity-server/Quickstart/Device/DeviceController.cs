@@ -61,9 +61,7 @@ public class DeviceController : Controller
     public async Task<IActionResult> UserCodeCapture(string userCode)
     {
         DeviceAuthorizationViewModel vm = await BuildViewModelAsync(userCode);
-        if (vm == null) return View("Error");
-
-        return View("UserCodeConfirmation", vm);
+        return vm == null ? View("Error") : View("UserCodeConfirmation", vm);
     }
 
     [HttpPost]
@@ -73,9 +71,7 @@ public class DeviceController : Controller
         if (model == null) throw new ArgumentNullException(nameof(model));
 
         ProcessConsentResult result = await ProcessConsent(model);
-        if (result.HasValidationError) return View("Error");
-
-        return View("Success");
+        return View(result.HasValidationError ? "Error" : "Success");
     }
 
     private async Task<ProcessConsentResult> ProcessConsent(DeviceAuthorizationInputModel model)
@@ -151,9 +147,7 @@ public class DeviceController : Controller
         DeviceAuthorizationInputModel model = null)
     {
         DeviceFlowAuthorizationRequest request = await _interaction.GetAuthorizationContextAsync(userCode);
-        if (request != null) return CreateConsentViewModel(userCode, model, request);
-
-        return null;
+        return request != null ? CreateConsentViewModel(userCode, model, request) : null;
     }
 
     private DeviceAuthorizationViewModel CreateConsentViewModel(string userCode,

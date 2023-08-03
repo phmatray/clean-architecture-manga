@@ -6,12 +6,9 @@ using System;
 /// </summary>
 public sealed class CustomWebApplicationFactoryFixture : IDisposable
 {
-    public CustomWebApplicationFactoryFixture() =>
-        CustomWebApplicationFactory = new CustomWebApplicationFactory();
-
     /// <summary>
     /// </summary>
-    public CustomWebApplicationFactory CustomWebApplicationFactory { get; }
+    public CustomWebApplicationFactory CustomWebApplicationFactory { get; } = new();
 
     public void Dispose() => CustomWebApplicationFactory?.Dispose();
 }

@@ -24,17 +24,14 @@ using Modules.Common.FeatureFlags;
 [FeatureGate(CustomFeature.GetAccount)]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public sealed class AccountsController : ControllerBase, IOutputPort
+public sealed class AccountsController(Notification notification)
+    : ControllerBase, IOutputPort
 {
-    private readonly Notification _notification;
-
     private IActionResult _viewModel;
-
-    public AccountsController(Notification notification) => _notification = notification;
 
     void IOutputPort.Invalid()
     {
-        var problemDetails = new ValidationProblemDetails(_notification.ModelState);
+        var problemDetails = new ValidationProblemDetails(notification.ModelState);
         _viewModel = BadRequest(problemDetails);
     }
 

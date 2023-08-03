@@ -14,12 +14,10 @@ using System;
 ///     </see>
 ///     .
 /// </summary>
-public readonly struct AccountId : IEquatable<AccountId>
+public readonly struct AccountId(Guid id)
+    : IEquatable<AccountId>
 {
-    public Guid Id { get; }
-
-    public AccountId(Guid id) =>
-        Id = id;
+    public Guid Id { get; } = id;
 
     public override bool Equals(object? obj) =>
         obj is AccountId o && Equals(o);

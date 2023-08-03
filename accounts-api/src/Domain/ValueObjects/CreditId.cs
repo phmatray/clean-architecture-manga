@@ -15,12 +15,10 @@ using System;
 ///     </see>
 ///     .
 /// </summary>
-public readonly struct CreditId : IEquatable<CreditId>
+public readonly struct CreditId(Guid id)
+    : IEquatable<CreditId>
 {
-    public Guid Id { get; }
-
-    public CreditId(Guid id) =>
-        Id = id;
+    public Guid Id { get; } = id;
 
     public override bool Equals(object? obj) =>
         obj is CreditId o && Equals(o);

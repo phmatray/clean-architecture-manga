@@ -22,13 +22,10 @@ using Modules.Common.FeatureFlags;
 [FeatureGate(CustomFeature.GetAccounts)]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public sealed class AccountsController : ControllerBase, IOutputPort
+public sealed class AccountsController(IGetAccountsUseCase useCase)
+    : ControllerBase, IOutputPort
 {
-    private readonly IGetAccountsUseCase _useCase;
-
     private IActionResult _viewModel;
-
-    public AccountsController(IGetAccountsUseCase useCase) => _useCase = useCase;
 
     void IOutputPort.Ok(IList<Account> accounts) => _viewModel = Ok(new GetAccountsResponse(accounts));
 
@@ -44,9 +41,9 @@ public sealed class AccountsController : ControllerBase, IOutputPort
     [ApiConventionMethod(typeof(CustomApiConventions), nameof(CustomApiConventions.List))]
     public async Task<IActionResult> Get()
     {
-        _useCase.SetOutputPort(this);
+        useCase.SetOutputPort(this);
 
-        await _useCase.Execute()
+        await useCase.Execute()
             .ConfigureAwait(false);
 
         return _viewModel!;

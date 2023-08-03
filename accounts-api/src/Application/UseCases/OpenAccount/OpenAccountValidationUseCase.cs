@@ -9,24 +9,18 @@ using Domain.ValueObjects;
 using Services;
 
 /// <inheritdoc />
-public sealed class OpenAccountValidationUseCase : IOpenAccountUseCase
+public sealed class OpenAccountValidationUseCase(
+        IOpenAccountUseCase useCase,
+        Notification notification)
+    : IOpenAccountUseCase
 {
-    private readonly Notification _notification;
-    private readonly IOpenAccountUseCase _useCase;
-    private IOutputPort _outputPort;
-
-    public OpenAccountValidationUseCase(IOpenAccountUseCase useCase, Notification notification)
-    {
-        _useCase = useCase;
-        _notification = notification;
-        _outputPort = new OpenAccountPresenter();
-    }
+    private IOutputPort _outputPort = new OpenAccountPresenter();
 
     /// <inheritdoc />
     public void SetOutputPort(IOutputPort outputPort)
     {
         _outputPort = outputPort;
-        _useCase.SetOutputPort(outputPort);
+        useCase.SetOutputPort(outputPort);
     }
 
     /// <inheritdoc />
@@ -39,17 +33,17 @@ public sealed class OpenAccountValidationUseCase : IOpenAccountUseCase
             currency != Currency.Real.Code &&
             currency != Currency.Krona.Code)
         {
-            _notification
+            notification
                 .Add(nameof(currency), "Currency is required.");
         }
 
         if (amount <= 0)
         {
-            _notification
+            notification
                 .Add(nameof(amount), "Amount should be positive.");
         }
 
-        if (_notification
+        if (notification
             .IsInvalid)
         {
             _outputPort
@@ -57,7 +51,7 @@ public sealed class OpenAccountValidationUseCase : IOpenAccountUseCase
             return;
         }
 
-        await _useCase
+        await useCase
             .Execute(amount, currency)
             .ConfigureAwait(false);
     }

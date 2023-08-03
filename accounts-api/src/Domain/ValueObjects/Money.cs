@@ -14,13 +14,11 @@ using System;
 ///     </see>
 ///     .
 /// </summary>
-public readonly struct Money : IEquatable<Money>
+public readonly struct Money(decimal amount, Currency currency)
+    : IEquatable<Money>
 {
-    public decimal Amount { get; }
-    public Currency Currency { get; }
-
-    public Money(decimal amount, Currency currency) =>
-        (Amount, Currency) = (amount, currency);
+    public decimal Amount { get; } = amount;
+    public Currency Currency { get; } = currency;
 
     public override bool Equals(object? obj) =>
         obj is Money o && Equals(o);

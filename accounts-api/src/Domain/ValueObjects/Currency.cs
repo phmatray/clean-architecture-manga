@@ -11,12 +11,10 @@ using System;
 ///     </see>
 ///     .
 /// </summary>
-public readonly struct Currency : IEquatable<Currency>
+public readonly struct Currency(string code)
+    : IEquatable<Currency>
 {
-    public string Code { get; }
-
-    public Currency(string code) =>
-        Code = code;
+    public string Code { get; } = code;
 
     public override bool Equals(object? obj) =>
         obj is Currency o && Equals(o);

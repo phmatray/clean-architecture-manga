@@ -12,19 +12,14 @@ using Newtonsoft.Json.Linq;
 /// <summary>
 ///     Real implementation of the Exchange Service using external data source
 /// </summary>
-public sealed class CurrencyExchangeService : ICurrencyExchange
+public sealed class CurrencyExchangeService(IHttpClientFactory httpClientFactory) : ICurrencyExchange
 {
     public const string HttpClientName = "Fixer";
 
     [SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>")]
-    private const string _exchangeUrl = "https://api.exchangeratesapi.io/latest?base=USD";
-
-    private readonly IHttpClientFactory _httpClientFactory;
+    private const string ExchangeUrl = "https://api.exchangeratesapi.io/latest?base=USD";
 
     private readonly Dictionary<Currency, decimal> _usdRates = new();
-
-    public CurrencyExchangeService(IHttpClientFactory httpClientFactory) =>
-        _httpClientFactory = httpClientFactory;
 
     /// <summary>
     ///     Converts allowed currencies into USD.
@@ -32,8 +27,8 @@ public sealed class CurrencyExchangeService : ICurrencyExchange
     /// <returns>Money.</returns>
     public async Task<Money> Convert(Money originalAmount, Currency destinationCurrency)
     {
-        HttpClient httpClient = _httpClientFactory.CreateClient(HttpClientName);
-        var requestUri = new Uri(_exchangeUrl);
+        HttpClient httpClient = httpClientFactory.CreateClient(HttpClientName);
+        var requestUri = new Uri(ExchangeUrl);
 
         HttpResponseMessage response = await httpClient.GetAsync(requestUri)
             .ConfigureAwait(false);

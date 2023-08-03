@@ -12,26 +12,14 @@ using Domain.ValueObjects;
 using Services;
 
 /// <inheritdoc />
-public sealed class OpenAccountUseCase : IOpenAccountUseCase
-{
-    private readonly IAccountFactory _accountFactory;
-    private readonly IAccountRepository _accountRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IUserService _userService;
-    private IOutputPort _outputPort;
-
-    public OpenAccountUseCase(
+public sealed class OpenAccountUseCase(
         IAccountRepository accountRepository,
         IUnitOfWork unitOfWork,
         IUserService userService,
         IAccountFactory accountFactory)
-    {
-        _accountRepository = accountRepository;
-        _unitOfWork = unitOfWork;
-        _userService = userService;
-        _accountFactory = accountFactory;
-        _outputPort = new OpenAccountPresenter();
-    }
+    : IOpenAccountUseCase
+{
+    private IOutputPort _outputPort = new OpenAccountPresenter();
 
     /// <inheritdoc />
     public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
@@ -42,13 +30,13 @@ public sealed class OpenAccountUseCase : IOpenAccountUseCase
 
     private async Task OpenAccount(Money amountToDeposit)
     {
-        string externalUserId = _userService
+        string externalUserId = userService
             .GetCurrentUserId();
 
-        Account account = _accountFactory
+        Account account = accountFactory
             .NewAccount(externalUserId, amountToDeposit.Currency);
 
-        Credit credit = _accountFactory
+        Credit credit = accountFactory
             .NewCredit(account, amountToDeposit, DateTime.Now);
 
         await Deposit(account, credit)
@@ -61,11 +49,11 @@ public sealed class OpenAccountUseCase : IOpenAccountUseCase
     {
         account.Deposit(credit);
 
-        await _accountRepository
+        await accountRepository
             .Add(account, credit)
             .ConfigureAwait(false);
 
-        await _unitOfWork
+        await unitOfWork
             .Save()
             .ConfigureAwait(false);
     }

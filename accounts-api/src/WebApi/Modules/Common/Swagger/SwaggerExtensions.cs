@@ -99,14 +99,9 @@ public static class SwaggerExtensions
 
                     string basePath = configuration["ASPNETCORE_BASEPATH"];
 
-                    if (!string.IsNullOrEmpty(basePath))
-                    {
-                        swaggerEndpoint = $"{basePath}/swagger/{description.GroupName}/swagger.json";
-                    }
-                    else
-                    {
-                        swaggerEndpoint = $"/swagger/{description.GroupName}/swagger.json";
-                    }
+                    swaggerEndpoint = !string.IsNullOrEmpty(basePath)
+                        ? $"{basePath}/swagger/{description.GroupName}/swagger.json"
+                        : $"/swagger/{description.GroupName}/swagger.json";
 
                     options.SwaggerEndpoint(swaggerEndpoint, description.GroupName.ToUpperInvariant());
                 }

@@ -15,16 +15,9 @@ using ValueObjects;
 ///     </see>
 ///     .
 /// </summary>
-public class Credit : ICredit
+public class Credit(CreditId creditId, AccountId accountId, DateTime transactionDate, decimal value, string currency)
+    : ICredit
 {
-    public Credit(CreditId creditId, AccountId accountId, DateTime transactionDate, decimal value, string currency)
-    {
-        CreditId = creditId;
-        AccountId = accountId;
-        TransactionDate = transactionDate;
-        Amount = new Money(value, new Currency(currency));
-    }
-
     /// <summary>
     ///     Gets Description.
     /// </summary>
@@ -33,12 +26,12 @@ public class Credit : ICredit
     /// <summary>
     ///     Gets or sets Transaction Date.
     /// </summary>
-    public DateTime TransactionDate { get; }
+    public DateTime TransactionDate { get; } = transactionDate;
 
     /// <summary>
     ///     Gets or sets AccountId.
     /// </summary>
-    public AccountId AccountId { get; }
+    public AccountId AccountId { get; } = accountId;
 
     public Account? Account { get; set; }
 
@@ -49,12 +42,12 @@ public class Credit : ICredit
     /// <summary>
     ///     Gets or sets Id.
     /// </summary>
-    public CreditId CreditId { get; }
+    public CreditId CreditId { get; } = creditId;
 
     /// <summary>
     ///     Gets or sets Amount.
     /// </summary>
-    public Money Amount { get; }
+    public Money Amount { get; } = new(value, new Currency(currency));
 
     /// <summary>
     ///     Calculate the sum of positive amounts.

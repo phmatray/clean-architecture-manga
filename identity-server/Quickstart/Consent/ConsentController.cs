@@ -46,9 +46,7 @@ public class ConsentController : Controller
     public async Task<IActionResult> Index(string returnUrl)
     {
         ConsentViewModel vm = await BuildViewModelAsync(returnUrl);
-        if (vm != null) return View("Index", vm);
-
-        return View("Error");
+        return vm != null ? View("Index", vm) : View("Error");
     }
 
     /// <summary>
@@ -63,12 +61,11 @@ public class ConsentController : Controller
         if (result.IsRedirect)
         {
             AuthorizationRequest context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
-            if (context?.IsNativeClient() == true)
+            return context?.IsNativeClient() == true
                 // The client is native, so this change in how to
                 // return the response is for better UX for the end user.
-                return this.LoadingPage("Redirect", result.RedirectUri);
-
-            return Redirect(result.RedirectUri);
+                ? this.LoadingPage("Redirect", result.RedirectUri)
+                : Redirect(result.RedirectUri);
         }
 
         if (result.HasValidationError) ModelState.AddModelError(string.Empty, result.ValidationError);

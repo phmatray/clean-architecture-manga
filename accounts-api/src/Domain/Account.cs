@@ -9,19 +9,13 @@ using Debits;
 using ValueObjects;
 
 /// <inheritdoc />
-public class Account : IAccount
+public class Account(AccountId accountId, string externalUserId, Currency currency)
+    : IAccount
 {
-    public Account(AccountId accountId, string externalUserId, Currency currency)
-    {
-        AccountId = accountId;
-        Currency = currency;
-        ExternalUserId = externalUserId;
-    }
-
     /// <summary>
     ///     Gets the ExternalUserId.
     /// </summary>
-    public string ExternalUserId { get; }
+    public string ExternalUserId { get; } = externalUserId;
 
     /// <summary>
     ///     Gets the Credits List.
@@ -36,10 +30,10 @@ public class Account : IAccount
     /// <summary>
     ///     Gets the Currency.
     /// </summary>
-    public Currency Currency { get; }
+    public Currency Currency { get; } = currency;
 
     /// <inheritdoc />
-    public AccountId AccountId { get; }
+    public AccountId AccountId { get; } = accountId;
 
     /// <inheritdoc />
     public void Deposit(Credit credit) => CreditsCollection.Add(credit);

@@ -27,19 +27,16 @@ using ViewModels;
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public sealed class TransactionsController : ControllerBase, IOutputPort
+public sealed class TransactionsController(Notification notification)
+    : ControllerBase, IOutputPort
 {
-    private readonly Notification _notification;
-
     private IActionResult _viewModel;
-
-    public TransactionsController(Notification notification) => _notification = notification;
 
     void IOutputPort.OutOfFunds() => _viewModel = BadRequest("Out of funds.");
 
     void IOutputPort.Invalid()
     {
-        var problemDetails = new ValidationProblemDetails(_notification.ModelState);
+        var problemDetails = new ValidationProblemDetails(notification.ModelState);
         _viewModel = BadRequest(problemDetails);
     }
 

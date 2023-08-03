@@ -15,16 +15,9 @@ using ValueObjects;
 ///     </see>
 ///     .
 /// </summary>
-public class Debit : IDebit
+public class Debit(DebitId debitId, AccountId accountId, DateTime transactionDate, decimal value, string currency)
+    : IDebit
 {
-    public Debit(DebitId DebitId, AccountId accountId, DateTime transactionDate, decimal value, string currency)
-    {
-        this.DebitId = DebitId;
-        AccountId = accountId;
-        TransactionDate = transactionDate;
-        Amount = new Money(value, new Currency(currency));
-    }
-
     /// <summary>
     ///     Gets Description.
     /// </summary>
@@ -33,12 +26,12 @@ public class Debit : IDebit
     /// <summary>
     ///     Gets or sets Transaction Date.
     /// </summary>
-    public DateTime TransactionDate { get; }
+    public DateTime TransactionDate { get; } = transactionDate;
 
     /// <summary>
     ///     Gets the AccountId.
     /// </summary>
-    public AccountId AccountId { get; }
+    public AccountId AccountId { get; } = accountId;
 
     public Account? Account { get; set; }
 
@@ -49,12 +42,12 @@ public class Debit : IDebit
     /// <summary>
     ///     Gets or sets Id.
     /// </summary>
-    public DebitId DebitId { get; }
+    public DebitId DebitId { get; } = debitId;
 
     /// <summary>
     ///     Gets or sets Amount.
     /// </summary>
-    public Money Amount { get; }
+    public Money Amount { get; } = new(value, new Currency(currency));
 
     /// <summary>
     ///     Calculate the sum of positive amounts.
