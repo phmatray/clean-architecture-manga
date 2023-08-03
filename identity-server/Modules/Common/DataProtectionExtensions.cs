@@ -16,7 +16,7 @@ public static class DataProtectionExtensions
     {
         services.AddDataProtection()
             .SetApplicationName("identity-server")
-            .PersistKeysToFileSystem(new DirectoryInfo(@"./"));
+            .PersistKeysToFileSystem(new DirectoryInfo("./"));
 
         return services;
     }
