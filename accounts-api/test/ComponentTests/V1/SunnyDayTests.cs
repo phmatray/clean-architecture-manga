@@ -26,8 +26,8 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
             .ReadAsStringAsync()
             .ConfigureAwait(false);
 
-        using StringReader stringReader = new StringReader(actualResponseString);
-        using JsonTextReader reader = new JsonTextReader(stringReader) { DateParseHandling = DateParseHandling.None };
+        using var stringReader = new StringReader(actualResponseString);
+        using var reader = new JsonTextReader(stringReader) { DateParseHandling = DateParseHandling.None };
 
         JObject jsonResponse = await JObject.LoadAsync(reader)
             .ConfigureAwait(false);
@@ -46,8 +46,8 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
             .GetStringAsync($"/api/v1/Accounts/{accountId}")
             .ConfigureAwait(false);
 
-        using StringReader stringReader = new StringReader(actualResponseString);
-        using JsonTextReader reader = new JsonTextReader(stringReader) { DateParseHandling = DateParseHandling.None };
+        using var stringReader = new StringReader(actualResponseString);
+        using var reader = new JsonTextReader(stringReader) { DateParseHandling = DateParseHandling.None };
 
         JObject jsonResponse = await JObject.LoadAsync(reader)
             .ConfigureAwait(false);
@@ -61,7 +61,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
     private async Task Deposit(string account, decimal amount)
     {
         HttpClient client = _factory.CreateClient();
-        FormUrlEncodedContent content = new FormUrlEncodedContent(new[]
+        var content = new FormUrlEncodedContent(new[]
         {
                 new KeyValuePair<string, string>("amount", amount.ToString(CultureInfo.InvariantCulture)),
                 new KeyValuePair<string, string>("currency", "USD")
@@ -81,7 +81,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
     {
         HttpClient client = _factory.CreateClient();
 
-        FormUrlEncodedContent content = new FormUrlEncodedContent(new[]
+        var content = new FormUrlEncodedContent(new[]
         {
                 new KeyValuePair<string, string>("amount", amount.ToString(CultureInfo.InvariantCulture)),
                 new KeyValuePair<string, string>("currency", "USD")
@@ -113,7 +113,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task GetAccount_Withdraw_Deposit_Withdraw_Withdraw_Close()
     {
-        Tuple<Guid, decimal> account = await GetAccounts()
+        var account = await GetAccounts()
             .ConfigureAwait(false);
         await GetAccount(account.Item1.ToString())
             .ConfigureAwait(false);

@@ -45,7 +45,7 @@ public sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOption
 
     private static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
     {
-        OpenApiInfo info = new OpenApiInfo
+        var info = new OpenApiInfo
         {
             Title = "Clean Architecture Manga API",
             Version = description.ApiVersion.ToString(),

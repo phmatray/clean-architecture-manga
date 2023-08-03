@@ -24,8 +24,8 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
             .ReadAsStringAsync()
             .ConfigureAwait(false);
 
-        using StringReader stringReader = new StringReader(actualResponseString);
-        using JsonTextReader reader = new JsonTextReader(stringReader) { DateParseHandling = DateParseHandling.None };
+        using var stringReader = new StringReader(actualResponseString);
+        using var reader = new JsonTextReader(stringReader) { DateParseHandling = DateParseHandling.None };
 
         JObject jsonResponse = await JObject.LoadAsync(reader)
             .ConfigureAwait(false);
@@ -47,7 +47,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task GetAccounts_GetAccount()
     {
-        Tuple<Guid, decimal> account = await GetAccounts()
+        var account = await GetAccounts()
             .ConfigureAwait(false);
         await GetAccount(account.Item1.ToString())
             .ConfigureAwait(false);

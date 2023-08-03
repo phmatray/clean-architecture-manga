@@ -18,8 +18,8 @@ public sealed class TransferUseCaseTests : IClassFixture<StandardFixture>
         decimal amount,
         decimal expectedOriginBalance)
     {
-        TransferPresenter presenter = new TransferPresenter();
-        TransferUseCase sut = new TransferUseCase(
+        var presenter = new TransferPresenter();
+        var sut = new TransferUseCase(
             _fixture.AccountRepositoryFake,
             _fixture.UnitOfWork,
             _fixture.EntityFactory,

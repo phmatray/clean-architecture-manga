@@ -36,7 +36,7 @@ public sealed class TransactionsController : ControllerBase, IOutputPort
 
     void IOutputPort.Invalid()
     {
-        ValidationProblemDetails problemDetails = new ValidationProblemDetails(_notification.ModelState);
+        var problemDetails = new ValidationProblemDetails(_notification.ModelState);
         _viewModel = BadRequest(problemDetails);
     }
 

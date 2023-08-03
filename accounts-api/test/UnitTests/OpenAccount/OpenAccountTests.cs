@@ -13,9 +13,9 @@ public sealed class OpenAccountTests : IClassFixture<StandardFixture>
     [ClassData(typeof(ValidDataSetup))]
     public async Task OpenAccount_Returns_Ok(decimal amount, string currency)
     {
-        OpenAccountPresenter presenter = new OpenAccountPresenter();
+        var presenter = new OpenAccountPresenter();
 
-        OpenAccountUseCase sut = new OpenAccountUseCase(
+        var sut = new OpenAccountUseCase(
             _fixture.AccountRepositoryFake,
             _fixture.UnitOfWork,
             _fixture.TestUserService,

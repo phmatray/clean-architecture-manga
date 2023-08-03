@@ -13,15 +13,15 @@ public sealed class ConvertEuroToDollarTests
     [Fact]
     public async Task Convert()
     {
-        ServiceCollection serviceCollection = new ServiceCollection();
+        var serviceCollection = new ServiceCollection();
 
         serviceCollection.AddHttpClient(CurrencyExchangeService.HttpClientName);
         serviceCollection.AddSingleton<CurrencyExchangeFake>();
 
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-        CurrencyExchangeFake sut = serviceProvider.GetRequiredService<CurrencyExchangeFake>();
+        var sut = serviceProvider.GetRequiredService<CurrencyExchangeFake>();
 
-        Money usdMoney = new Money(100, Currency.Euro);
+        var usdMoney = new Money(100, Currency.Euro);
         Money actual = await sut.Convert(usdMoney, Currency.Dollar);
 
         Assert.True(actual.Amount > 100);

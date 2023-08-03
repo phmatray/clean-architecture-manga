@@ -37,15 +37,15 @@ public sealed class TransactionsController : ControllerBase, IOutputPort
 
     void IOutputPort.OutOfFunds()
     {
-        Dictionary<string, string[]> messages = new Dictionary<string, string[]> { { "", new[] { "Out of funds." } } };
+        var messages = new Dictionary<string, string[]> { { "", new[] { "Out of funds." } } };
 
-        ValidationProblemDetails problemDetails = new ValidationProblemDetails(messages);
+        var problemDetails = new ValidationProblemDetails(messages);
         _viewModel = BadRequest(problemDetails);
     }
 
     void IOutputPort.Invalid()
     {
-        ValidationProblemDetails problemDetails = new ValidationProblemDetails(_notification.ModelState);
+        var problemDetails = new ValidationProblemDetails(_notification.ModelState);
         _viewModel = BadRequest(problemDetails);
     }
 

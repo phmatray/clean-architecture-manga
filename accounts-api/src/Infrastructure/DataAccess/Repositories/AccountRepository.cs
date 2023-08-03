@@ -114,7 +114,7 @@ public sealed class AccountRepository : IAccountRepository
 
     public async Task<IList<Account>> GetAccounts(string externalUserId)
     {
-        List<Account> accounts = await _context
+        var accounts = await _context
             .Accounts
             .Where(e => e.ExternalUserId == externalUserId)
             .ToListAsync()

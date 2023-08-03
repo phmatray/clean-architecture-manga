@@ -38,19 +38,19 @@ public sealed class CloseAccountTests : IClassFixture<StandardFixture>
     [Fact]
     public async Task CloseAccountUseCase_Returns_Closed_Account_Id_When_Account_Has_Zero_Balance()
     {
-        GetAccountPresenter getAccountPresenter = new GetAccountPresenter();
-        CloseAccountPresenter closeAccountPresenter = new CloseAccountPresenter();
+        var getAccountPresenter = new GetAccountPresenter();
+        var closeAccountPresenter = new CloseAccountPresenter();
 
-        GetAccountUseCase getAccountUseCase = new GetAccountUseCase(_fixture.AccountRepositoryFake);
+        var getAccountUseCase = new GetAccountUseCase(_fixture.AccountRepositoryFake);
 
-        WithdrawUseCase withdrawUseCase = new WithdrawUseCase(
+        var withdrawUseCase = new WithdrawUseCase(
             _fixture.AccountRepositoryFake,
             _fixture.UnitOfWork,
             _fixture.EntityFactory,
             _fixture.TestUserService,
             _fixture.CurrencyExchangeFake);
 
-        CloseAccountUseCase sut = new CloseAccountUseCase(
+        var sut = new CloseAccountUseCase(
             _fixture.AccountRepositoryFake,
             _fixture.TestUserService,
             _fixture.UnitOfWork);

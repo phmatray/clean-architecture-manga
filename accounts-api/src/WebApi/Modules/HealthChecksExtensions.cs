@@ -29,7 +29,7 @@ public static class HealthChecksExtensions
     {
         IHealthChecksBuilder healthChecks = services.AddHealthChecks();
 
-        IFeatureManager featureManager = services
+        var featureManager = services
             .BuildServiceProvider()
             .GetRequiredService<IFeatureManager>();
 
@@ -63,7 +63,7 @@ public static class HealthChecksExtensions
     {
         context.Response.ContentType = MediaTypeNames.Application.Json;
 
-        JObject json = new JObject(
+        var json = new JObject(
             new JProperty("status", result.Status.ToString()),
             new JProperty("results", new JObject(result.Entries.Select(pair =>
                 new JProperty(pair.Key, new JObject(

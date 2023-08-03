@@ -18,15 +18,15 @@ public sealed class AccountRepositoryTests : IClassFixture<StandardFixture>
     [Fact]
     public async Task Add()
     {
-        AccountRepository accountRepository = new AccountRepository(_fixture.Context);
+        var accountRepository = new AccountRepository(_fixture.Context);
 
-        Account account = new Account(
+        var account = new Account(
             new AccountId(Guid.NewGuid()),
             SeedData.DefaultExternalUserId,
             Currency.Dollar
         );
 
-        Credit credit = new Credit(
+        var credit = new Credit(
             new CreditId(Guid.NewGuid()),
             account.AccountId,
             DateTime.Now,
@@ -59,15 +59,15 @@ public sealed class AccountRepositoryTests : IClassFixture<StandardFixture>
     [Fact]
     public async Task Delete()
     {
-        AccountRepository accountRepository = new AccountRepository(_fixture.Context);
+        var accountRepository = new AccountRepository(_fixture.Context);
 
-        Account account = new Account(
+        var account = new Account(
             new AccountId(Guid.NewGuid()),
             SeedData.DefaultExternalUserId,
             Currency.Dollar
         );
 
-        Credit credit = new Credit(
+        var credit = new Credit(
             new CreditId(Guid.NewGuid()),
             account.AccountId,
             DateTime.Now,

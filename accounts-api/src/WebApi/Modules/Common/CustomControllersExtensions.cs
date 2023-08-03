@@ -17,7 +17,7 @@ public static class CustomControllersExtensions
     /// </summary>
     public static IServiceCollection AddCustomControllers(this IServiceCollection services)
     {
-        IFeatureManager featureManager = services
+        var featureManager = services
             .BuildServiceProvider()
             .GetRequiredService<IFeatureManager>();
 

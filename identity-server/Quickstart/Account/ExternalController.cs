@@ -104,7 +104,7 @@ public class ExternalController : Controller
         }
 
         // lookup our user and external provider info
-        var (user, provider, providerUserId, claims) =
+        (TestUser user, string provider, string providerUserId, var claims) =
             FindUserFromExternalProvider(result);
         if (user == null)
             // this might be where you might initiate a custom workflow for user registration

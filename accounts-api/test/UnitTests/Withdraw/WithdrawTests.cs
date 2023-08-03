@@ -18,8 +18,8 @@ public sealed class WithdrawTests : IClassFixture<StandardFixture>
         decimal amount,
         decimal expectedBalance)
     {
-        WithdrawPresenter presenter = new WithdrawPresenter();
-        WithdrawUseCase sut = new WithdrawUseCase(
+        var presenter = new WithdrawPresenter();
+        var sut = new WithdrawUseCase(
             _fixture.AccountRepositoryFake,
             _fixture.UnitOfWork,
             _fixture.EntityFactory,

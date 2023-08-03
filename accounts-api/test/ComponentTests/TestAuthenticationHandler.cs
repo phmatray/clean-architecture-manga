@@ -33,9 +33,9 @@ public sealed class TestAuthenticationHandler : AuthenticationHandler<Authentica
                 new Claim("id", "92b93e37-0995-4849-a7ed-149e8706d8ef")
             };
 
-        ClaimsIdentity identity = new ClaimsIdentity(claims, Scheme.Name);
-        ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-        AuthenticationTicket ticket = new AuthenticationTicket(principal, Scheme.Name);
+        var identity = new ClaimsIdentity(claims, Scheme.Name);
+        var principal = new ClaimsPrincipal(identity);
+        var ticket = new AuthenticationTicket(principal, Scheme.Name);
 
         return await Task.FromResult(AuthenticateResult.Success(ticket));
     }

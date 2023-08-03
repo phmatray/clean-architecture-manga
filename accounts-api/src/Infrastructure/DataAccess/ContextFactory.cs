@@ -24,7 +24,7 @@ public sealed class ContextFactory : IDesignTimeDbContextFactory<MangaContext>
     {
         string connectionString = ReadDefaultConnectionStringFromAppSettings();
 
-        DbContextOptionsBuilder<MangaContext> builder = new DbContextOptionsBuilder<MangaContext>();
+        var builder = new DbContextOptionsBuilder<MangaContext>();
         Console.WriteLine(connectionString);
         builder.UseSqlServer(connectionString);
         builder.EnableSensitiveDataLogging();
@@ -42,7 +42,7 @@ public sealed class ContextFactory : IDesignTimeDbContextFactory<MangaContext>
             .AddEnvironmentVariables()
             .Build();
 
-        string connectionString = configuration.GetValue<string>("PersistenceModule:DefaultConnection");
+        var connectionString = configuration.GetValue<string>("PersistenceModule:DefaultConnection");
         return connectionString;
     }
 }

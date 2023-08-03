@@ -33,7 +33,7 @@ public sealed class CurrencyExchangeService : ICurrencyExchange
     public async Task<Money> Convert(Money originalAmount, Currency destinationCurrency)
     {
         HttpClient httpClient = _httpClientFactory.CreateClient(HttpClientName);
-        Uri requestUri = new Uri(_exchangeUrl);
+        var requestUri = new Uri(_exchangeUrl);
 
         HttpResponseMessage response = await httpClient.GetAsync(requestUri)
             .ConfigureAwait(false);
@@ -58,11 +58,11 @@ public sealed class CurrencyExchangeService : ICurrencyExchange
     private void ParseCurrencies(string responseJson)
     {
         JObject rates = JObject.Parse(responseJson);
-        decimal eur = rates["rates"]![Currency.Euro.Code]!.Value<decimal>();
-        decimal cad = rates["rates"]![Currency.Canadian.Code]!.Value<decimal>();
-        decimal gbh = rates["rates"]![Currency.BritishPound.Code]!.Value<decimal>();
-        decimal sek = rates["rates"]![Currency.Krona.Code]!.Value<decimal>();
-        decimal brl = rates["rates"]![Currency.Real.Code]!.Value<decimal>();
+        var eur = rates["rates"]![Currency.Euro.Code]!.Value<decimal>();
+        var cad = rates["rates"]![Currency.Canadian.Code]!.Value<decimal>();
+        var gbh = rates["rates"]![Currency.BritishPound.Code]!.Value<decimal>();
+        var sek = rates["rates"]![Currency.Krona.Code]!.Value<decimal>();
+        var brl = rates["rates"]![Currency.Real.Code]!.Value<decimal>();
 
         _usdRates.Add(Currency.Dollar, 1);
         _usdRates.Add(Currency.Euro, eur);

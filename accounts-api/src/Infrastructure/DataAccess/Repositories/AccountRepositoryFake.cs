@@ -93,7 +93,7 @@ public sealed class AccountRepositoryFake : IAccountRepository
     /// <inheritdoc />
     public async Task<IList<Account>> GetAccounts(string externalUserId)
     {
-        List<Account> accounts = _context
+        var accounts = _context
             .Accounts
             .Where(e => e.ExternalUserId == externalUserId)
             .ToList();

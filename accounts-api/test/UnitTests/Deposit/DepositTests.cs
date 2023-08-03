@@ -18,8 +18,8 @@ public sealed class DepositTests : IClassFixture<StandardFixture>
     [ClassData(typeof(ValidDataSetup))]
     public async Task DepositUseCase_Returns_Transaction(decimal amount)
     {
-        DepositPresenter presenter = new DepositPresenter();
-        DepositUseCase sut = new DepositUseCase(
+        var presenter = new DepositPresenter();
+        var sut = new DepositUseCase(
             _fixture.AccountRepositoryFake,
             _fixture.UnitOfWork,
             _fixture.EntityFactory,
@@ -40,16 +40,16 @@ public sealed class DepositTests : IClassFixture<StandardFixture>
     [ClassData(typeof(InvalidDataSetup))]
     public async Task DepositUseCase_Returns_Invalid_When_Negative_Amount(decimal amount)
     {
-        Notification notification = new Notification();
-        DepositPresenter presenter = new DepositPresenter();
+        var notification = new Notification();
+        var presenter = new DepositPresenter();
 
-        DepositUseCase depositUseCase = new DepositUseCase(
+        var depositUseCase = new DepositUseCase(
             _fixture.AccountRepositoryFake,
             _fixture.UnitOfWork,
             _fixture.EntityFactory,
             _fixture.CurrencyExchangeFake);
 
-        DepositValidationUseCase sut = new DepositValidationUseCase(
+        var sut = new DepositValidationUseCase(
             depositUseCase, notification);
 
         sut.SetOutputPort(presenter);

@@ -17,7 +17,7 @@ public sealed class GetAccountsResponse
     {
         foreach (Account account in accounts)
         {
-            AccountModel accountModel = new AccountModel(account);
+            var accountModel = new AccountModel(account);
             Accounts.Add(accountModel);
         }
     }

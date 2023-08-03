@@ -32,8 +32,8 @@ public sealed class GetAccountsTests
 
         Assert.Equal(HttpStatusCode.OK, actualResponse.StatusCode);
 
-        using StringReader stringReader = new StringReader(actualResponseString);
-        using JsonTextReader reader = new JsonTextReader(stringReader) { DateParseHandling = DateParseHandling.None };
+        using var stringReader = new StringReader(actualResponseString);
+        using var reader = new JsonTextReader(stringReader) { DateParseHandling = DateParseHandling.None };
         JObject jsonResponse = await JObject.LoadAsync(reader)
             .ConfigureAwait(false);
 

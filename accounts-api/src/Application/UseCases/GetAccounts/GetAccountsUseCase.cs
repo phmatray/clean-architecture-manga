@@ -44,7 +44,7 @@ public sealed class GetAccountsUseCase : IGetAccountsUseCase
 
     private async Task GetAccounts(string externalUserId)
     {
-        IList<Account>? accounts = await _accountRepository
+        var accounts = await _accountRepository
             .GetAccounts(externalUserId)
             .ConfigureAwait(false);
 

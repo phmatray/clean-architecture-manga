@@ -35,7 +35,7 @@ public sealed class AccountsController : ControllerBase, IOutputPort
 
     void IOutputPort.Invalid()
     {
-        ValidationProblemDetails problemDetails = new ValidationProblemDetails(_notification.ModelState);
+        var problemDetails = new ValidationProblemDetails(_notification.ModelState);
         _viewModel = BadRequest(problemDetails);
     }
 
@@ -43,7 +43,7 @@ public sealed class AccountsController : ControllerBase, IOutputPort
 
     void IOutputPort.Ok(Account account)
     {
-        using DataTable dataTable = new DataTable();
+        using var dataTable = new DataTable();
         dataTable.Columns.Add("AccountId", typeof(Guid));
         dataTable.Columns.Add("Amount", typeof(decimal));
 
@@ -51,7 +51,7 @@ public sealed class AccountsController : ControllerBase, IOutputPort
 
         byte[] fileContents;
 
-        using (ExcelPackage pck = new ExcelPackage())
+        using (var pck = new ExcelPackage())
         {
             ExcelWorksheet ws = pck.Workbook.Worksheets.Add(account.AccountId.ToString());
             ws.Cells["A1"].LoadFromDataTable(dataTable, true);

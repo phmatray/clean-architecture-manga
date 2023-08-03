@@ -23,7 +23,7 @@ public sealed class CustomErrorController : Controller
     [AllowAnonymous]
     public IActionResult CustomError()
     {
-        CustomErrorResponse model =
+        var model =
             new CustomErrorResponse { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier };
 
         return View("~/UseCases/V1/CustomError/CustomError.cshtml", model);

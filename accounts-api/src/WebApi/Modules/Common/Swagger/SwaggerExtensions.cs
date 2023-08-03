@@ -35,7 +35,7 @@ public static class SwaggerExtensions
     /// </summary>
     public static IServiceCollection AddSwagger(this IServiceCollection services)
     {
-        IFeatureManager featureManager = services
+        var featureManager = services
             .BuildServiceProvider()
             .GetRequiredService<IFeatureManager>();
 
