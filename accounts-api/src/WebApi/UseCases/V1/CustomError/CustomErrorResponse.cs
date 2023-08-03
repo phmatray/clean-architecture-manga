@@ -13,5 +13,5 @@ public sealed class CustomErrorResponse
     /// <summary>
     ///     Verify if RequestId is null or empty.
     /// </summary>
-    public bool ShowRequestId => !string.IsNullOrEmpty(this.RequestId);
+    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 }

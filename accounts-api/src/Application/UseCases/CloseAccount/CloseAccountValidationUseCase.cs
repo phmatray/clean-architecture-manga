@@ -20,16 +20,16 @@ public sealed class CloseAccountValidationUseCase : ICloseAccountUseCase
     /// </summary>
     public CloseAccountValidationUseCase(ICloseAccountUseCase useCase, Notification notification)
     {
-        this._useCase = useCase;
-        this._notification = notification;
-        this._outputPort = new CloseAccountPresenter();
+        _useCase = useCase;
+        _notification = notification;
+        _outputPort = new CloseAccountPresenter();
     }
 
     /// <inheritdoc />
     public void SetOutputPort(IOutputPort outputPort)
     {
-        this._outputPort = outputPort;
-        this._useCase.SetOutputPort(outputPort);
+        _outputPort = outputPort;
+        _useCase.SetOutputPort(outputPort);
     }
 
     /// <inheritdoc />
@@ -37,19 +37,19 @@ public sealed class CloseAccountValidationUseCase : ICloseAccountUseCase
     {
         if (accountId == Guid.Empty)
         {
-            this._notification
+            _notification
                 .Add(nameof(accountId), "AccountId is required.");
         }
 
-        if (!this._notification
+        if (!_notification
             .IsValid)
         {
-            this._outputPort
+            _outputPort
                 .Invalid();
             return;
         }
 
-        await this._useCase
+        await _useCase
             .Execute(accountId)
             .ConfigureAwait(false);
     }

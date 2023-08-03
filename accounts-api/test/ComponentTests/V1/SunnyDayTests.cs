@@ -13,11 +13,11 @@ using Xunit;
 public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly CustomWebApplicationFactory _factory;
-    public SunnyDayTests(CustomWebApplicationFactory factory) => this._factory = factory;
+    public SunnyDayTests(CustomWebApplicationFactory factory) => _factory = factory;
 
     private async Task<Tuple<Guid, decimal>> GetAccounts()
     {
-        HttpClient client = this._factory.CreateClient();
+        HttpClient client = _factory.CreateClient();
         HttpResponseMessage actualResponse = await client
             .GetAsync("/api/v1/Accounts/")
             .ConfigureAwait(false);
@@ -41,7 +41,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
 
     private async Task<Tuple<Guid, decimal>> GetAccount(string accountId)
     {
-        HttpClient client = this._factory.CreateClient();
+        HttpClient client = _factory.CreateClient();
         string actualResponseString = await client
             .GetStringAsync($"/api/v1/Accounts/{accountId}")
             .ConfigureAwait(false);
@@ -60,7 +60,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
 
     private async Task Deposit(string account, decimal amount)
     {
-        HttpClient client = this._factory.CreateClient();
+        HttpClient client = _factory.CreateClient();
         FormUrlEncodedContent content = new FormUrlEncodedContent(new[]
         {
                 new KeyValuePair<string, string>("amount", amount.ToString(CultureInfo.InvariantCulture)),
@@ -79,7 +79,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
 
     private async Task Withdraw(string account, decimal amount)
     {
-        HttpClient client = this._factory.CreateClient();
+        HttpClient client = _factory.CreateClient();
 
         FormUrlEncodedContent content = new FormUrlEncodedContent(new[]
         {
@@ -99,7 +99,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
 
     private async Task Close(string account)
     {
-        HttpClient client = this._factory.CreateClient();
+        HttpClient client = _factory.CreateClient();
         HttpResponseMessage response = await client.DeleteAsync($"api/v1/Accounts/{account}")
             .ConfigureAwait(false);
 
@@ -113,23 +113,23 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task GetAccount_Withdraw_Deposit_Withdraw_Withdraw_Close()
     {
-        Tuple<Guid, decimal> account = await this.GetAccounts()
+        Tuple<Guid, decimal> account = await GetAccounts()
             .ConfigureAwait(false);
-        await this.GetAccount(account.Item1.ToString())
+        await GetAccount(account.Item1.ToString())
             .ConfigureAwait(false);
-        await this.Withdraw(account.Item1.ToString(), account.Item2)
+        await Withdraw(account.Item1.ToString(), account.Item2)
             .ConfigureAwait(false);
-        await this.Deposit(account.Item1.ToString(), 500)
+        await Deposit(account.Item1.ToString(), 500)
             .ConfigureAwait(false);
-        await this.Deposit(account.Item1.ToString(), 300)
+        await Deposit(account.Item1.ToString(), 300)
             .ConfigureAwait(false);
-        await this.Withdraw(account.Item1.ToString(), 400)
+        await Withdraw(account.Item1.ToString(), 400)
             .ConfigureAwait(false);
-        await this.Withdraw(account.Item1.ToString(), 400)
+        await Withdraw(account.Item1.ToString(), 400)
             .ConfigureAwait(false);
-        account = await this.GetAccounts()
+        account = await GetAccounts()
             .ConfigureAwait(false);
-        await this.Close(account.Item1.ToString())
+        await Close(account.Item1.ToString())
             .ConfigureAwait(false);
     }
 }

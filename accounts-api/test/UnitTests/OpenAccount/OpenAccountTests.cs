@@ -7,7 +7,7 @@ using Xunit;
 public sealed class OpenAccountTests : IClassFixture<StandardFixture>
 {
     private readonly StandardFixture _fixture;
-    public OpenAccountTests(StandardFixture fixture) => this._fixture = fixture;
+    public OpenAccountTests(StandardFixture fixture) => _fixture = fixture;
 
     [Theory]
     [ClassData(typeof(ValidDataSetup))]
@@ -16,10 +16,10 @@ public sealed class OpenAccountTests : IClassFixture<StandardFixture>
         OpenAccountPresenter presenter = new OpenAccountPresenter();
 
         OpenAccountUseCase sut = new OpenAccountUseCase(
-            this._fixture.AccountRepositoryFake,
-            this._fixture.UnitOfWork,
-            this._fixture.TestUserService,
-            this._fixture.EntityFactory);
+            _fixture.AccountRepositoryFake,
+            _fixture.UnitOfWork,
+            _fixture.TestUserService,
+            _fixture.EntityFactory);
 
         sut.SetOutputPort(presenter);
 

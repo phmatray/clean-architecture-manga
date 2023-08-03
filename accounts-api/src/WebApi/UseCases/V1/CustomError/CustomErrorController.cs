@@ -24,8 +24,8 @@ public sealed class CustomErrorController : Controller
     public IActionResult CustomError()
     {
         CustomErrorResponse model =
-            new CustomErrorResponse { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier };
+            new CustomErrorResponse { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier };
 
-        return this.View("~/UseCases/V1/CustomError/CustomError.cshtml", model);
+        return View("~/UseCases/V1/CustomError/CustomError.cshtml", model);
     }
 }

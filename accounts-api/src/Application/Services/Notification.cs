@@ -16,7 +16,7 @@ public sealed class Notification
     {
         get
         {
-            Dictionary<string, string[]> modelState = this._errorMessages
+            Dictionary<string, string[]> modelState = _errorMessages
                 .ToDictionary(item => item.Key, item => item.Value.ToArray());
 
             return modelState;
@@ -27,9 +27,9 @@ public sealed class Notification
     /// <summary>
     ///     Returns true when it does not contains error messages.
     /// </summary>
-    public bool IsValid => this._errorMessages.Count == 0;
+    public bool IsValid => _errorMessages.Count == 0;
 
-    public bool IsInvalid => this._errorMessages.Count > 0;
+    public bool IsInvalid => _errorMessages.Count > 0;
 
     /// <summary>
     /// </summary>
@@ -37,11 +37,11 @@ public sealed class Notification
     /// <param name="message"></param>
     public void Add(string key, string message)
     {
-        if (!this._errorMessages.ContainsKey(key))
+        if (!_errorMessages.ContainsKey(key))
         {
-            this._errorMessages[key] = new List<string>();
+            _errorMessages[key] = new List<string>();
         }
 
-        this._errorMessages[key].Add(message);
+        _errorMessages[key].Add(message);
     }
 }

@@ -16,14 +16,14 @@ public sealed class AccountDetailsModel
     /// </summary>
     public AccountDetailsModel(Account account)
     {
-        this.AccountId = account.AccountId.Id;
-        this.CurrentBalance = account.GetCurrentBalance().Amount;
-        this.Credits = account
+        AccountId = account.AccountId.Id;
+        CurrentBalance = account.GetCurrentBalance().Amount;
+        Credits = account
             .CreditsCollection
             .Select(e => new CreditModel(e))
             .ToList();
 
-        this.Debits = account
+        Debits = account
             .DebitsCollection
             .Select(e => new DebitModel(e))
             .ToList();

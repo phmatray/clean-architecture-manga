@@ -26,46 +26,46 @@ public sealed class OpenAccountUseCase : IOpenAccountUseCase
         IUserService userService,
         IAccountFactory accountFactory)
     {
-        this._accountRepository = accountRepository;
-        this._unitOfWork = unitOfWork;
-        this._userService = userService;
-        this._accountFactory = accountFactory;
-        this._outputPort = new OpenAccountPresenter();
+        _accountRepository = accountRepository;
+        _unitOfWork = unitOfWork;
+        _userService = userService;
+        _accountFactory = accountFactory;
+        _outputPort = new OpenAccountPresenter();
     }
 
     /// <inheritdoc />
-    public void SetOutputPort(IOutputPort outputPort) => this._outputPort = outputPort;
+    public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
 
     /// <inheritdoc />
     public Task Execute(decimal amount, string currency) =>
-        this.OpenAccount(new Money(amount, new Currency(currency)));
+        OpenAccount(new Money(amount, new Currency(currency)));
 
     private async Task OpenAccount(Money amountToDeposit)
     {
-        string externalUserId = this._userService
+        string externalUserId = _userService
             .GetCurrentUserId();
 
-        Account account = this._accountFactory
+        Account account = _accountFactory
             .NewAccount(externalUserId, amountToDeposit.Currency);
 
-        Credit credit = this._accountFactory
+        Credit credit = _accountFactory
             .NewCredit(account, amountToDeposit, DateTime.Now);
 
-        await this.Deposit(account, credit)
+        await Deposit(account, credit)
             .ConfigureAwait(false);
 
-        this._outputPort?.Ok(account);
+        _outputPort?.Ok(account);
     }
 
     private async Task Deposit(Account account, Credit credit)
     {
         account.Deposit(credit);
 
-        await this._accountRepository
+        await _accountRepository
             .Add(account, credit)
             .ConfigureAwait(false);
 
-        await this._unitOfWork
+        await _unitOfWork
             .Save()
             .ConfigureAwait(false);
     }

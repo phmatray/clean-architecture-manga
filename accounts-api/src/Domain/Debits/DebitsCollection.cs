@@ -24,7 +24,7 @@ public sealed class DebitsCollection : List<Debit>
     /// <returns>Total.</returns>
     public Money GetTotal()
     {
-        if (this.Count == 0)
+        if (Count == 0)
         {
             return new Money(0, new Currency(string.Empty));
         }

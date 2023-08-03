@@ -20,19 +20,19 @@ public readonly struct CreditId : IEquatable<CreditId>
     public Guid Id { get; }
 
     public CreditId(Guid id) =>
-        this.Id = id;
+        Id = id;
 
     public override bool Equals(object? obj) =>
-        obj is CreditId o && this.Equals(o);
+        obj is CreditId o && Equals(o);
 
-    public bool Equals(CreditId other) => this.Id == other.Id;
+    public bool Equals(CreditId other) => Id == other.Id;
 
     public override int GetHashCode() =>
-        HashCode.Combine(this.Id);
+        HashCode.Combine(Id);
 
     public static bool operator ==(CreditId left, CreditId right) => left.Equals(right);
 
     public static bool operator !=(CreditId left, CreditId right) => !(left == right);
 
-    public override string ToString() => this.Id.ToString();
+    public override string ToString() => Id.ToString();
 }

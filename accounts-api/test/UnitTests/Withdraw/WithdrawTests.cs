@@ -10,7 +10,7 @@ public sealed class WithdrawTests : IClassFixture<StandardFixture>
 {
     private readonly StandardFixture _fixture;
 
-    public WithdrawTests(StandardFixture fixture) => this._fixture = fixture;
+    public WithdrawTests(StandardFixture fixture) => _fixture = fixture;
 
     [Theory]
     [ClassData(typeof(ValidDataSetup))]
@@ -20,11 +20,11 @@ public sealed class WithdrawTests : IClassFixture<StandardFixture>
     {
         WithdrawPresenter presenter = new WithdrawPresenter();
         WithdrawUseCase sut = new WithdrawUseCase(
-            this._fixture.AccountRepositoryFake,
-            this._fixture.UnitOfWork,
-            this._fixture.EntityFactory,
-            this._fixture.TestUserService,
-            this._fixture.CurrencyExchangeFake);
+            _fixture.AccountRepositoryFake,
+            _fixture.UnitOfWork,
+            _fixture.EntityFactory,
+            _fixture.TestUserService,
+            _fixture.CurrencyExchangeFake);
 
         sut.SetOutputPort(presenter);
 

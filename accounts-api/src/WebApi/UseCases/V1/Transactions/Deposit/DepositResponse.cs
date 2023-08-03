@@ -11,7 +11,7 @@ public sealed class DepositResponse
     /// <summary>
     ///     The Deposit response constructor.
     /// </summary>
-    public DepositResponse(CreditModel transaction) => this.Transaction = transaction;
+    public DepositResponse(CreditModel transaction) => Transaction = transaction;
 
     /// <summary>
     ///     Gets Transaction.

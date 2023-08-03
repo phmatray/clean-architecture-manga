@@ -19,10 +19,10 @@ public class Credit : ICredit
 {
     public Credit(CreditId creditId, AccountId accountId, DateTime transactionDate, decimal value, string currency)
     {
-        this.CreditId = creditId;
-        this.AccountId = accountId;
-        this.TransactionDate = transactionDate;
-        this.Amount = new Money(value, new Currency(currency));
+        CreditId = creditId;
+        AccountId = accountId;
+        TransactionDate = transactionDate;
+        Amount = new Money(value, new Currency(currency));
     }
 
     /// <summary>
@@ -42,9 +42,9 @@ public class Credit : ICredit
 
     public Account? Account { get; set; }
 
-    public decimal Value => this.Amount.Amount;
+    public decimal Value => Amount.Amount;
 
-    public string Currency => this.Amount.Currency.Code;
+    public string Currency => Amount.Currency.Code;
 
     /// <summary>
     ///     Gets or sets Id.
@@ -61,5 +61,5 @@ public class Credit : ICredit
     /// </summary>
     /// <param name="amount">Positive amount.</param>
     /// <returns>The positive sum.</returns>
-    public Money Sum(Money amount) => this.Amount.Add(amount);
+    public Money Sum(Money amount) => Amount.Add(amount);
 }

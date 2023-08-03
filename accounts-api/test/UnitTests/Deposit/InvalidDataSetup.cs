@@ -6,7 +6,7 @@ internal sealed class InvalidDataSetup : TheoryData<decimal>
 {
     public InvalidDataSetup()
     {
-        this.Add(-100);
-        this.Add(0);
+        Add(-100);
+        Add(0);
     }
 }

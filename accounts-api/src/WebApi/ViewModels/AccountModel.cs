@@ -14,11 +14,11 @@ public sealed class AccountModel
     /// </summary>
     public AccountModel(Account account)
     {
-        this.AccountId = account.AccountId.Id;
-        this.CurrentBalance = account
+        AccountId = account.AccountId.Id;
+        CurrentBalance = account
             .GetCurrentBalance()
             .Amount;
-        this.Currency = account.Currency.Code;
+        Currency = account.Currency.Code;
     }
 
     /// <summary>

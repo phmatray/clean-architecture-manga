@@ -16,12 +16,12 @@ public sealed class DepositPresenter : IOutputPort
     public Credit? Credit { get; private set; }
     public bool? IsNotFound { get; private set; }
     public bool? InvalidOutput { get; private set; }
-    public void Invalid() => this.InvalidOutput = true;
-    public void NotFound() => this.IsNotFound = true;
+    public void Invalid() => InvalidOutput = true;
+    public void NotFound() => IsNotFound = true;
 
     public void Ok(Credit credit, Account account)
     {
-        this.Credit = credit;
-        this.Account = account;
+        Credit = credit;
+        Account = account;
     }
 }

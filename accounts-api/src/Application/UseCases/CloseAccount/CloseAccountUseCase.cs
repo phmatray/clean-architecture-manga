@@ -30,27 +30,27 @@ public sealed class CloseAccountUseCase : ICloseAccountUseCase
         IUserService userService,
         IUnitOfWork unitOfWork)
     {
-        this._accountRepository = accountRepository;
-        this._userService = userService;
-        this._unitOfWork = unitOfWork;
-        this._outputPort = new CloseAccountPresenter();
+        _accountRepository = accountRepository;
+        _userService = userService;
+        _unitOfWork = unitOfWork;
+        _outputPort = new CloseAccountPresenter();
     }
 
     /// <inheritdoc />
-    public void SetOutputPort(IOutputPort outputPort) => this._outputPort = outputPort;
+    public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
 
     /// <inheritdoc />
     public Task Execute(Guid accountId)
     {
-        string externalUserId = this._userService
+        string externalUserId = _userService
             .GetCurrentUserId();
 
-        return this.CloseAccountInternal(new AccountId(accountId), externalUserId);
+        return CloseAccountInternal(new AccountId(accountId), externalUserId);
     }
 
     private async Task CloseAccountInternal(AccountId accountId, string externalUserId)
     {
-        IAccount account = await this._accountRepository
+        IAccount account = await _accountRepository
             .Find(accountId, externalUserId)
             .ConfigureAwait(false);
 
@@ -58,27 +58,27 @@ public sealed class CloseAccountUseCase : ICloseAccountUseCase
         {
             if (!closingAccount.IsClosingAllowed())
             {
-                this._outputPort.HasFunds();
+                _outputPort.HasFunds();
                 return;
             }
 
-            await this.Close(closingAccount)
+            await Close(closingAccount)
                 .ConfigureAwait(false);
 
-            this._outputPort.Ok(closingAccount);
+            _outputPort.Ok(closingAccount);
             return;
         }
 
-        this._outputPort.NotFound();
+        _outputPort.NotFound();
     }
 
     private async Task Close(Account closeAccount)
     {
-        await this._accountRepository
+        await _accountRepository
             .Delete(closeAccount.AccountId)
             .ConfigureAwait(false);
 
-        await this._unitOfWork
+        await _unitOfWork
             .Save()
             .ConfigureAwait(false);
     }

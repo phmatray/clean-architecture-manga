@@ -24,7 +24,7 @@ public sealed class CurrencyExchangeService : ICurrencyExchange
     private readonly Dictionary<Currency, decimal> _usdRates = new Dictionary<Currency, decimal>();
 
     public CurrencyExchangeService(IHttpClientFactory httpClientFactory) =>
-        this._httpClientFactory = httpClientFactory;
+        _httpClientFactory = httpClientFactory;
 
     /// <summary>
     ///     Converts allowed currencies into USD.
@@ -32,7 +32,7 @@ public sealed class CurrencyExchangeService : ICurrencyExchange
     /// <returns>Money.</returns>
     public async Task<Money> Convert(Money originalAmount, Currency destinationCurrency)
     {
-        HttpClient httpClient = this._httpClientFactory.CreateClient(HttpClientName);
+        HttpClient httpClient = _httpClientFactory.CreateClient(HttpClientName);
         Uri requestUri = new Uri(_exchangeUrl);
 
         HttpResponseMessage response = await httpClient.GetAsync(requestUri)
@@ -45,10 +45,10 @@ public sealed class CurrencyExchangeService : ICurrencyExchange
             .ReadAsStringAsync()
             .ConfigureAwait(false);
 
-        this.ParseCurrencies(responseJson);
+        ParseCurrencies(responseJson);
 
-        decimal usdAmount = this._usdRates[originalAmount.Currency] / originalAmount.Amount;
-        decimal destinationAmount = this._usdRates[destinationCurrency] / usdAmount;
+        decimal usdAmount = _usdRates[originalAmount.Currency] / originalAmount.Amount;
+        decimal destinationAmount = _usdRates[destinationCurrency] / usdAmount;
 
         return new Money(
             destinationAmount,
@@ -64,11 +64,11 @@ public sealed class CurrencyExchangeService : ICurrencyExchange
         decimal sek = rates["rates"]![Currency.Krona.Code]!.Value<decimal>();
         decimal brl = rates["rates"]![Currency.Real.Code]!.Value<decimal>();
 
-        this._usdRates.Add(Currency.Dollar, 1);
-        this._usdRates.Add(Currency.Euro, eur);
-        this._usdRates.Add(Currency.Canadian, cad);
-        this._usdRates.Add(Currency.BritishPound, gbh);
-        this._usdRates.Add(Currency.Krona, sek);
-        this._usdRates.Add(Currency.Real, brl);
+        _usdRates.Add(Currency.Dollar, 1);
+        _usdRates.Add(Currency.Euro, eur);
+        _usdRates.Add(Currency.Canadian, cad);
+        _usdRates.Add(Currency.BritishPound, gbh);
+        _usdRates.Add(Currency.Krona, sek);
+        _usdRates.Add(Currency.Real, brl);
     }
 }

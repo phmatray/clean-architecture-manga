@@ -20,7 +20,7 @@ public sealed class CustomControllerFeatureProvider : IApplicationFeatureProvide
     /// <summary>
     ///     Custom Controller Feature Provider constructor.
     /// </summary>
-    public CustomControllerFeatureProvider(IFeatureManager featureManager) => this._featureManager = featureManager;
+    public CustomControllerFeatureProvider(IFeatureManager featureManager) => _featureManager = featureManager;
 
     /// <summary>
     ///     Populate Features.
@@ -47,7 +47,7 @@ public sealed class CustomControllerFeatureProvider : IApplicationFeatureProvide
                 {
                     CustomAttributeTypedArgument typedArgument = (CustomAttributeTypedArgument)argumentValue!;
                     CustomFeature typedArgumentValue = (CustomFeature)(int)typedArgument.Value!;
-                    bool isFeatureEnabled = this._featureManager
+                    bool isFeatureEnabled = _featureManager
                         .IsEnabledAsync(typedArgumentValue.ToString())
                         .ConfigureAwait(false)
                         .GetAwaiter()

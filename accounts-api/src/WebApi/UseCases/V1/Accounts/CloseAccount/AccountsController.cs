@@ -33,21 +33,21 @@ public sealed class AccountsController : ControllerBase, IOutputPort
 
     public AccountsController(ICloseAccountUseCase useCase, Notification notification)
     {
-        this._useCase = useCase;
-        this._notification = notification;
+        _useCase = useCase;
+        _notification = notification;
     }
 
     void IOutputPort.Invalid()
     {
-        ValidationProblemDetails problemDetails = new ValidationProblemDetails(this._notification.ModelState);
-        this._viewModel = this.BadRequest(problemDetails);
+        ValidationProblemDetails problemDetails = new ValidationProblemDetails(_notification.ModelState);
+        _viewModel = BadRequest(problemDetails);
     }
 
-    void IOutputPort.NotFound() => this._viewModel = this.NotFound();
+    void IOutputPort.NotFound() => _viewModel = NotFound();
 
-    void IOutputPort.HasFunds() => this._viewModel = this.BadRequest("Account has funds.");
+    void IOutputPort.HasFunds() => _viewModel = BadRequest("Account has funds.");
 
-    void IOutputPort.Ok(Account account) => this._viewModel = this.Ok(new CloseAccountResponse(account));
+    void IOutputPort.Ok(Account account) => _viewModel = Ok(new CloseAccountResponse(account));
 
     /// <summary>
     ///     Close an Account.
@@ -64,11 +64,11 @@ public sealed class AccountsController : ControllerBase, IOutputPort
     public async Task<IActionResult> Close(
         [FromRoute][Required] Guid accountId)
     {
-        this._useCase.SetOutputPort(this);
+        _useCase.SetOutputPort(this);
 
-        await this._useCase.Execute(accountId)
+        await _useCase.Execute(accountId)
             .ConfigureAwait(false);
 
-        return this._viewModel!;
+        return _viewModel!;
     }
 }

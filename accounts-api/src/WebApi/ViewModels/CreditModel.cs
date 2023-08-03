@@ -14,11 +14,11 @@ public sealed class CreditModel
     /// </summary>
     public CreditModel(Credit credit)
     {
-        this.TransactionId = credit.CreditId.Id;
-        this.Amount = credit.Amount.Amount;
-        this.Currency = credit.Amount.Currency.Code;
-        this.Description = "Credit";
-        this.TransactionDate = credit.TransactionDate;
+        TransactionId = credit.CreditId.Id;
+        Amount = credit.Amount.Amount;
+        Currency = credit.Amount.Currency.Code;
+        Description = "Credit";
+        TransactionDate = credit.TransactionDate;
     }
 
     /// <summary>

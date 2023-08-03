@@ -10,7 +10,7 @@ public sealed class TransferUseCaseTests : IClassFixture<StandardFixture>
 {
     private readonly StandardFixture _fixture;
 
-    public TransferUseCaseTests(StandardFixture fixture) => this._fixture = fixture;
+    public TransferUseCaseTests(StandardFixture fixture) => _fixture = fixture;
 
     [Theory]
     [ClassData(typeof(ValidDataSetup))]
@@ -20,10 +20,10 @@ public sealed class TransferUseCaseTests : IClassFixture<StandardFixture>
     {
         TransferPresenter presenter = new TransferPresenter();
         TransferUseCase sut = new TransferUseCase(
-            this._fixture.AccountRepositoryFake,
-            this._fixture.UnitOfWork,
-            this._fixture.EntityFactory,
-            this._fixture.CurrencyExchangeFake);
+            _fixture.AccountRepositoryFake,
+            _fixture.UnitOfWork,
+            _fixture.EntityFactory,
+            _fixture.CurrencyExchangeFake);
 
         sut.SetOutputPort(presenter);
 

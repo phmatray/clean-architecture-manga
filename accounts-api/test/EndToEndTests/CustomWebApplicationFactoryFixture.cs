@@ -7,11 +7,11 @@ using System;
 public sealed class CustomWebApplicationFactoryFixture : IDisposable
 {
     public CustomWebApplicationFactoryFixture() =>
-        this.CustomWebApplicationFactory = new CustomWebApplicationFactory();
+        CustomWebApplicationFactory = new CustomWebApplicationFactory();
 
     /// <summary>
     /// </summary>
     public CustomWebApplicationFactory CustomWebApplicationFactory { get; }
 
-    public void Dispose() => this.CustomWebApplicationFactory?.Dispose();
+    public void Dispose() => CustomWebApplicationFactory?.Dispose();
 }

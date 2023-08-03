@@ -6,7 +6,7 @@ internal sealed class ValidDataSetup : TheoryData<decimal>
 {
     public ValidDataSetup()
     {
-        this.Add(100);
-        this.Add(200);
+        Add(100);
+        Add(200);
     }
 }

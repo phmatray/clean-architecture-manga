@@ -12,7 +12,7 @@ public sealed class CloseAccountResponse
     /// <summary>
     ///     Close Account Response constructor.
     /// </summary>
-    public CloseAccountResponse(Account account) => this.AccountId = account.AccountId.Id;
+    public CloseAccountResponse(Account account) => AccountId = account.AccountId.Id;
 
     /// <summary>
     ///     Gets account ID.

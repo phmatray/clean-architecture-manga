@@ -14,17 +14,17 @@ using Xunit;
 public sealed class CloseAccountTests : IClassFixture<StandardFixture>
 {
     private readonly StandardFixture _fixture;
-    public CloseAccountTests(StandardFixture fixture) => this._fixture = fixture;
+    public CloseAccountTests(StandardFixture fixture) => _fixture = fixture;
 
     [Theory]
     [ClassData(typeof(ValidDataSetup))]
     public void IsClosingAllowed_Returns_False_When_Account_Has_Funds(decimal amount)
     {
-        Account account = this._fixture
+        Account account = _fixture
             .EntityFactory
             .NewAccount(Guid.NewGuid().ToString(), Currency.Dollar);
 
-        Credit credit = this._fixture
+        Credit credit = _fixture
             .EntityFactory
             .NewCredit(account, new Money(amount, Currency.Dollar), DateTime.Now);
 
@@ -41,19 +41,19 @@ public sealed class CloseAccountTests : IClassFixture<StandardFixture>
         GetAccountPresenter getAccountPresenter = new GetAccountPresenter();
         CloseAccountPresenter closeAccountPresenter = new CloseAccountPresenter();
 
-        GetAccountUseCase getAccountUseCase = new GetAccountUseCase(this._fixture.AccountRepositoryFake);
+        GetAccountUseCase getAccountUseCase = new GetAccountUseCase(_fixture.AccountRepositoryFake);
 
         WithdrawUseCase withdrawUseCase = new WithdrawUseCase(
-            this._fixture.AccountRepositoryFake,
-            this._fixture.UnitOfWork,
-            this._fixture.EntityFactory,
-            this._fixture.TestUserService,
-            this._fixture.CurrencyExchangeFake);
+            _fixture.AccountRepositoryFake,
+            _fixture.UnitOfWork,
+            _fixture.EntityFactory,
+            _fixture.TestUserService,
+            _fixture.CurrencyExchangeFake);
 
         CloseAccountUseCase sut = new CloseAccountUseCase(
-            this._fixture.AccountRepositoryFake,
-            this._fixture.TestUserService,
-            this._fixture.UnitOfWork);
+            _fixture.AccountRepositoryFake,
+            _fixture.TestUserService,
+            _fixture.UnitOfWork);
 
         sut.SetOutputPort(closeAccountPresenter);
         getAccountUseCase.SetOutputPort(getAccountPresenter);
@@ -74,7 +74,7 @@ public sealed class CloseAccountTests : IClassFixture<StandardFixture>
     [Fact]
     public void IsClosingAllowed_Returns_True_When_Account_Does_Not_Has_Funds()
     {
-        IAccount account = this._fixture.EntityFactory
+        IAccount account = _fixture.EntityFactory
             .NewAccount(Guid.NewGuid().ToString(), Currency.Dollar);
 
         bool actual = account.IsClosingAllowed();

@@ -18,12 +18,12 @@ public sealed class ExternalUserService : IUserService
     /// <param name="httpContextAccessor"></param>
     public ExternalUserService(
         IHttpContextAccessor httpContextAccessor) =>
-        this._httpContextAccessor = httpContextAccessor;
+        _httpContextAccessor = httpContextAccessor;
 
     /// <inheritdoc />
     public string GetCurrentUserId()
     {
-        ClaimsPrincipal user = this._httpContextAccessor
+        ClaimsPrincipal user = _httpContextAccessor
                 .HttpContext!
             .User;
 

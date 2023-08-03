@@ -28,9 +28,9 @@ public sealed class AccountsController : ControllerBase, IOutputPort
 
     private IActionResult _viewModel;
 
-    public AccountsController(IGetAccountsUseCase useCase) => this._useCase = useCase;
+    public AccountsController(IGetAccountsUseCase useCase) => _useCase = useCase;
 
-    void IOutputPort.Ok(IList<Account> accounts) => this._viewModel = this.Ok(new GetAccountsResponse(accounts));
+    void IOutputPort.Ok(IList<Account> accounts) => _viewModel = Ok(new GetAccountsResponse(accounts));
 
     /// <summary>
     ///     Get Accounts.
@@ -44,11 +44,11 @@ public sealed class AccountsController : ControllerBase, IOutputPort
     [ApiConventionMethod(typeof(CustomApiConventions), nameof(CustomApiConventions.List))]
     public async Task<IActionResult> Get()
     {
-        this._useCase.SetOutputPort(this);
+        _useCase.SetOutputPort(this);
 
-        await this._useCase.Execute()
+        await _useCase.Execute()
             .ConfigureAwait(false);
 
-        return this._viewModel!;
+        return _viewModel!;
     }
 }

@@ -13,9 +13,9 @@ public class Account : IAccount
 {
     public Account(AccountId accountId, string externalUserId, Currency currency)
     {
-        this.AccountId = accountId;
-        this.Currency = currency;
-        this.ExternalUserId = externalUserId;
+        AccountId = accountId;
+        Currency = currency;
+        ExternalUserId = externalUserId;
     }
 
     /// <summary>
@@ -42,22 +42,22 @@ public class Account : IAccount
     public AccountId AccountId { get; }
 
     /// <inheritdoc />
-    public void Deposit(Credit credit) => this.CreditsCollection.Add(credit);
+    public void Deposit(Credit credit) => CreditsCollection.Add(credit);
 
     /// <inheritdoc />
-    public void Withdraw(Debit debit) => this.DebitsCollection.Add(debit);
+    public void Withdraw(Debit debit) => DebitsCollection.Add(debit);
 
     /// <inheritdoc />
-    public bool IsClosingAllowed() => this.GetCurrentBalance()
+    public bool IsClosingAllowed() => GetCurrentBalance()
         .IsZero();
 
     /// <inheritdoc />
     public Money GetCurrentBalance()
     {
-        Money totalCredits = this.CreditsCollection
+        Money totalCredits = CreditsCollection
             .GetTotal();
 
-        Money totalDebits = this.DebitsCollection
+        Money totalDebits = DebitsCollection
             .GetTotal();
 
         Money totalAmount = totalCredits

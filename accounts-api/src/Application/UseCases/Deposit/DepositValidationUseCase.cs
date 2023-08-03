@@ -23,16 +23,16 @@ public sealed class DepositValidationUseCase : IDepositUseCase
     /// <param name="notification"></param>
     public DepositValidationUseCase(IDepositUseCase useCase, Notification notification)
     {
-        this._useCase = useCase;
-        this._notification = notification;
-        this._outputPort = new DepositPresenter();
+        _useCase = useCase;
+        _notification = notification;
+        _outputPort = new DepositPresenter();
     }
 
     /// <inheritdoc />
     public void SetOutputPort(IOutputPort outputPort)
     {
-        this._outputPort = outputPort;
-        this._useCase.SetOutputPort(outputPort);
+        _outputPort = outputPort;
+        _useCase.SetOutputPort(outputPort);
     }
 
     /// <inheritdoc />
@@ -40,7 +40,7 @@ public sealed class DepositValidationUseCase : IDepositUseCase
     {
         if (accountId == Guid.Empty)
         {
-            this._notification
+            _notification
                 .Add(nameof(accountId), "AccountId is required.");
         }
 
@@ -51,25 +51,25 @@ public sealed class DepositValidationUseCase : IDepositUseCase
             currency != Currency.Real.Code &&
             currency != Currency.Krona.Code)
         {
-            this._notification
+            _notification
                 .Add(nameof(currency), "Currency is required.");
         }
 
         if (amount <= 0)
         {
-            this._notification
+            _notification
                 .Add(nameof(amount), "Amount should be positive.");
         }
 
-        if (this._notification
+        if (_notification
             .IsInvalid)
         {
-            this._outputPort
+            _outputPort
                 .Invalid();
             return;
         }
 
-        await this._useCase
+        await _useCase
             .Execute(accountId, amount, currency)
             .ConfigureAwait(false);
     }

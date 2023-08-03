@@ -11,7 +11,7 @@ public sealed class OpenAccountResponse
     /// <summary>
     ///     The Response Registration Constructor.
     /// </summary>
-    public OpenAccountResponse(AccountModel accountModel) => this.Account = accountModel;
+    public OpenAccountResponse(AccountModel accountModel) => Account = accountModel;
 
     /// <summary>
     ///     Gets customer.

@@ -13,15 +13,15 @@ public sealed class UnitOfWork : IUnitOfWork, IDisposable
     private readonly MangaContext _context;
     private bool _disposed;
 
-    public UnitOfWork(MangaContext context) => this._context = context;
+    public UnitOfWork(MangaContext context) => _context = context;
 
     /// <inheritdoc />
-    public void Dispose() => this.Dispose(true);
+    public void Dispose() => Dispose(true);
 
     /// <inheritdoc />
     public async Task<int> Save()
     {
-        int affectedRows = await this._context
+        int affectedRows = await _context
             .SaveChangesAsync()
             .ConfigureAwait(false);
         return affectedRows;
@@ -29,11 +29,11 @@ public sealed class UnitOfWork : IUnitOfWork, IDisposable
 
     private void Dispose(bool disposing)
     {
-        if (!this._disposed && disposing)
+        if (!_disposed && disposing)
         {
-            this._context.Dispose();
+            _context.Dispose();
         }
 
-        this._disposed = true;
+        _disposed = true;
     }
 }

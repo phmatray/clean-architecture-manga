@@ -19,19 +19,19 @@ public readonly struct AccountId : IEquatable<AccountId>
     public Guid Id { get; }
 
     public AccountId(Guid id) =>
-        this.Id = id;
+        Id = id;
 
     public override bool Equals(object? obj) =>
-        obj is AccountId o && this.Equals(o);
+        obj is AccountId o && Equals(o);
 
-    public bool Equals(AccountId other) => this.Id == other.Id;
+    public bool Equals(AccountId other) => Id == other.Id;
 
     public override int GetHashCode() =>
-        HashCode.Combine(this.Id);
+        HashCode.Combine(Id);
 
     public static bool operator ==(AccountId left, AccountId right) => left.Equals(right);
 
     public static bool operator !=(AccountId left, AccountId right) => !(left == right);
 
-    public override string ToString() => this.Id.ToString();
+    public override string ToString() => Id.ToString();
 }

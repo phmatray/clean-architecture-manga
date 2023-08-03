@@ -6,8 +6,8 @@ internal sealed class ValidDataSetup : TheoryData<decimal>
 {
     public ValidDataSetup()
     {
-        this.Add(0.5M);
-        this.Add(100M);
-        this.Add(200M);
+        Add(0.5M);
+        Add(100M);
+        Add(200M);
     }
 }

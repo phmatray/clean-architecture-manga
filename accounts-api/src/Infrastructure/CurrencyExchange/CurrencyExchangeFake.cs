@@ -24,8 +24,8 @@ public sealed class CurrencyExchangeFake : ICurrencyExchange
     {
         // hardcoded rates from https://www.xe.com/currency/usd-us-dollar
 
-        decimal usdAmount = this._usdRates[originalAmount.Currency] / originalAmount.Amount;
-        decimal destinationAmount = this._usdRates[destinationCurrency] / usdAmount;
+        decimal usdAmount = _usdRates[originalAmount.Currency] / originalAmount.Amount;
+        decimal destinationAmount = _usdRates[destinationCurrency] / usdAmount;
 
         return Task.FromResult(
             new Money(

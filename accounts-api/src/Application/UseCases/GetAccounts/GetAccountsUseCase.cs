@@ -25,29 +25,29 @@ public sealed class GetAccountsUseCase : IGetAccountsUseCase
         IUserService userService,
         IAccountRepository accountRepository)
     {
-        this._userService = userService;
-        this._accountRepository = accountRepository;
-        this._outputPort = new GetAccountPresenter();
+        _userService = userService;
+        _accountRepository = accountRepository;
+        _outputPort = new GetAccountPresenter();
     }
 
     /// <inheritdoc />
-    public void SetOutputPort(IOutputPort outputPort) => this._outputPort = outputPort;
+    public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
 
     /// <inheritdoc />
     public Task Execute()
     {
-        string externalUserId = this._userService
+        string externalUserId = _userService
             .GetCurrentUserId();
 
-        return this.GetAccounts(externalUserId);
+        return GetAccounts(externalUserId);
     }
 
     private async Task GetAccounts(string externalUserId)
     {
-        IList<Account>? accounts = await this._accountRepository
+        IList<Account>? accounts = await _accountRepository
             .GetAccounts(externalUserId)
             .ConfigureAwait(false);
 
-        this._outputPort.Ok(accounts);
+        _outputPort.Ok(accounts);
     }
 }

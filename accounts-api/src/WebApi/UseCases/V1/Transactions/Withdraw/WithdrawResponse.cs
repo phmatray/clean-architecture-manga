@@ -11,7 +11,7 @@ public sealed class WithdrawResponse
     /// <summary>
     ///     Withdraw Response constructor.
     /// </summary>
-    public WithdrawResponse(DebitModel debitModel) => this.Transaction = debitModel;
+    public WithdrawResponse(DebitModel debitModel) => Transaction = debitModel;
 
     /// <summary>
     ///     Gets Transaction.

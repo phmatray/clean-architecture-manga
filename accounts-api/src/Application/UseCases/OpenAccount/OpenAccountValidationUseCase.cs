@@ -17,16 +17,16 @@ public sealed class OpenAccountValidationUseCase : IOpenAccountUseCase
 
     public OpenAccountValidationUseCase(IOpenAccountUseCase useCase, Notification notification)
     {
-        this._useCase = useCase;
-        this._notification = notification;
-        this._outputPort = new OpenAccountPresenter();
+        _useCase = useCase;
+        _notification = notification;
+        _outputPort = new OpenAccountPresenter();
     }
 
     /// <inheritdoc />
     public void SetOutputPort(IOutputPort outputPort)
     {
-        this._outputPort = outputPort;
-        this._useCase.SetOutputPort(outputPort);
+        _outputPort = outputPort;
+        _useCase.SetOutputPort(outputPort);
     }
 
     /// <inheritdoc />
@@ -39,25 +39,25 @@ public sealed class OpenAccountValidationUseCase : IOpenAccountUseCase
             currency != Currency.Real.Code &&
             currency != Currency.Krona.Code)
         {
-            this._notification
+            _notification
                 .Add(nameof(currency), "Currency is required.");
         }
 
         if (amount <= 0)
         {
-            this._notification
+            _notification
                 .Add(nameof(amount), "Amount should be positive.");
         }
 
-        if (this._notification
+        if (_notification
             .IsInvalid)
         {
-            this._outputPort
+            _outputPort
                 .Invalid();
             return;
         }
 
-        await this._useCase
+        await _useCase
             .Execute(amount, currency)
             .ConfigureAwait(false);
     }

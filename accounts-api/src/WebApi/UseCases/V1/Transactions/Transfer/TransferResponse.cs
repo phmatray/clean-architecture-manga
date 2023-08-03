@@ -11,7 +11,7 @@ public sealed class TransferResponse
     /// <summary>
     ///     Transfer Response constructor.
     /// </summary>
-    public TransferResponse(DebitModel transaction) => this.Transaction = transaction;
+    public TransferResponse(DebitModel transaction) => Transaction = transaction;
 
     /// <summary>
     ///     Gets Transaction.

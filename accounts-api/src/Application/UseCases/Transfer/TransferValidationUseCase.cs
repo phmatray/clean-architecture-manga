@@ -21,16 +21,16 @@ public sealed class TransferValidationUseCase : ITransferUseCase
     /// </summary>
     public TransferValidationUseCase(ITransferUseCase useCase, Notification notification)
     {
-        this._useCase = useCase;
-        this._notification = notification;
-        this._outputPort = new TransferPresenter();
+        _useCase = useCase;
+        _notification = notification;
+        _outputPort = new TransferPresenter();
     }
 
     /// <inheritdoc />
     public void SetOutputPort(IOutputPort outputPort)
     {
-        this._outputPort = outputPort;
-        this._useCase.SetOutputPort(outputPort);
+        _outputPort = outputPort;
+        _useCase.SetOutputPort(outputPort);
     }
 
     /// <inheritdoc />
@@ -38,13 +38,13 @@ public sealed class TransferValidationUseCase : ITransferUseCase
     {
         if (originAccountId == Guid.Empty)
         {
-            this._notification
+            _notification
                 .Add(nameof(originAccountId), "AccountId is required.");
         }
 
         if (destinationAccountId == Guid.Empty)
         {
-            this._notification
+            _notification
                 .Add(nameof(destinationAccountId), "AccountId is required.");
         }
 
@@ -55,25 +55,25 @@ public sealed class TransferValidationUseCase : ITransferUseCase
             currency != Currency.Real.Code &&
             currency != Currency.Krona.Code)
         {
-            this._notification
+            _notification
                 .Add(nameof(currency), "Currency is required.");
         }
 
         if (amount <= 0)
         {
-            this._notification
+            _notification
                 .Add(nameof(amount), "Amount should be positive.");
         }
 
-        if (this._notification
+        if (_notification
             .IsInvalid)
         {
-            this._outputPort
+            _outputPort
                 .Invalid();
             return;
         }
 
-        await this._useCase
+        await _useCase
             .Execute(originAccountId, destinationAccountId, amount, currency)
             .ConfigureAwait(false);
     }

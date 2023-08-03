@@ -20,7 +20,7 @@ public sealed class Startup
     /// <summary>
     ///     Startup constructor.
     /// </summary>
-    public Startup(IConfiguration configuration) => this.Configuration = configuration;
+    public Startup(IConfiguration configuration) => Configuration = configuration;
 
     private IConfiguration Configuration { get; }
 
@@ -29,12 +29,12 @@ public sealed class Startup
     /// </summary>
     public void ConfigureServices(IServiceCollection services) =>
         services
-            .AddFeatureFlags(this.Configuration) // should be the first one.
+            .AddFeatureFlags(Configuration) // should be the first one.
             .AddInvalidRequestLogging()
-            .AddCurrencyExchange(this.Configuration)
-            .AddSQLServer(this.Configuration)
-            .AddHealthChecks(this.Configuration)
-            .AddAuthentication(this.Configuration)
+            .AddCurrencyExchange(Configuration)
+            .AddSQLServer(Configuration)
+            .AddHealthChecks(Configuration)
+            .AddAuthentication(Configuration)
             .AddVersioning()
             .AddSwagger()
             .AddUseCases()
@@ -62,12 +62,12 @@ public sealed class Startup
         }
 
         app
-            .UseProxy(this.Configuration)
+            .UseProxy(Configuration)
             .UseHealthChecks()
             .UseCustomCors()
             .UseCustomHttpMetrics()
             .UseRouting()
-            .UseVersionedSwagger(provider, this.Configuration, env)
+            .UseVersionedSwagger(provider, Configuration, env)
             .UseAuthentication()
             .UseAuthorization()
             .UseEndpoints(endpoints =>

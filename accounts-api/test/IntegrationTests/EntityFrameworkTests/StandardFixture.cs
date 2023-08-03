@@ -15,13 +15,13 @@ public sealed class StandardFixture : IDisposable
             .UseSqlServer(connectionString)
             .Options;
 
-        this.Context = new MangaContext(options);
-        this.Context
+        Context = new MangaContext(options);
+        Context
             .Database
             .EnsureCreated();
     }
 
     public MangaContext Context { get; }
 
-    public void Dispose() => this.Context.Dispose();
+    public void Dispose() => Context.Dispose();
 }

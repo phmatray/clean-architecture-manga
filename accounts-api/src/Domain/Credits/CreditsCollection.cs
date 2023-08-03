@@ -24,7 +24,7 @@ public sealed class CreditsCollection : List<Credit>
     /// <returns>Positive amount.</returns>
     public Money GetTotal()
     {
-        if (this.Count == 0)
+        if (Count == 0)
         {
             return new Money(0, new Currency(string.Empty));
         }

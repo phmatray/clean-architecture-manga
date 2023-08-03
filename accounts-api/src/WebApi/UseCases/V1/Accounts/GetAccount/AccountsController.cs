@@ -30,17 +30,17 @@ public sealed class AccountsController : ControllerBase, IOutputPort
 
     private IActionResult _viewModel;
 
-    public AccountsController(Notification notification) => this._notification = notification;
+    public AccountsController(Notification notification) => _notification = notification;
 
     void IOutputPort.Invalid()
     {
-        ValidationProblemDetails problemDetails = new ValidationProblemDetails(this._notification.ModelState);
-        this._viewModel = this.BadRequest(problemDetails);
+        ValidationProblemDetails problemDetails = new ValidationProblemDetails(_notification.ModelState);
+        _viewModel = BadRequest(problemDetails);
     }
 
-    void IOutputPort.NotFound() => this._viewModel = this.NotFound();
+    void IOutputPort.NotFound() => _viewModel = NotFound();
 
-    void IOutputPort.Ok(Account account) => this._viewModel = this.Ok(new GetAccountResponse(account));
+    void IOutputPort.Ok(Account account) => _viewModel = Ok(new GetAccountResponse(account));
 
     /// <summary>
     ///     Get an account details.
@@ -63,6 +63,6 @@ public sealed class AccountsController : ControllerBase, IOutputPort
         await useCase.Execute(accountId)
             .ConfigureAwait(false);
 
-        return this._viewModel!;
+        return _viewModel!;
     }
 }

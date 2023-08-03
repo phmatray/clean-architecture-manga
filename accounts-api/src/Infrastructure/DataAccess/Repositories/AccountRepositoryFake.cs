@@ -20,16 +20,16 @@ public sealed class AccountRepositoryFake : IAccountRepository
     /// <summary>
     /// </summary>
     /// <param name="context"></param>
-    public AccountRepositoryFake(MangaContextFake context) => this._context = context;
+    public AccountRepositoryFake(MangaContextFake context) => _context = context;
 
     /// <inheritdoc />
     public async Task Add(Account account, Credit credit)
     {
-        this._context
+        _context
             .Accounts
             .Add(account);
 
-        this._context
+        _context
             .Credits
             .Add(credit);
 
@@ -40,7 +40,7 @@ public sealed class AccountRepositoryFake : IAccountRepository
     /// <inheritdoc />
     public async Task Delete(AccountId accountId)
     {
-        Account accountOld = this._context
+        Account accountOld = _context
             .Accounts
             .SingleOrDefault(e => e.AccountId.Equals(accountId));
 
@@ -49,7 +49,7 @@ public sealed class AccountRepositoryFake : IAccountRepository
             return;
         }
 
-        this._context
+        _context
             .Accounts
             .Remove(accountOld);
 
@@ -59,7 +59,7 @@ public sealed class AccountRepositoryFake : IAccountRepository
 
     public async Task<IAccount> Find(AccountId accountId, string externalUserId)
     {
-        Account account = this._context
+        Account account = _context
             .Accounts
             .Where(e => e.ExternalUserId == externalUserId && e.AccountId.Equals(accountId))
             .Select(e => e)
@@ -77,7 +77,7 @@ public sealed class AccountRepositoryFake : IAccountRepository
     /// <inheritdoc />
     public async Task<IAccount> GetAccount(AccountId accountId)
     {
-        Account account = this._context
+        Account account = _context
             .Accounts
             .SingleOrDefault(e => e.AccountId.Equals(accountId));
 
@@ -93,7 +93,7 @@ public sealed class AccountRepositoryFake : IAccountRepository
     /// <inheritdoc />
     public async Task<IList<Account>> GetAccounts(string externalUserId)
     {
-        List<Account> accounts = this._context
+        List<Account> accounts = _context
             .Accounts
             .Where(e => e.ExternalUserId == externalUserId)
             .ToList();
@@ -105,17 +105,17 @@ public sealed class AccountRepositoryFake : IAccountRepository
     /// <inheritdoc />
     public async Task Update(Account account, Credit credit)
     {
-        Account accountOld = this._context
+        Account accountOld = _context
             .Accounts
             .SingleOrDefault(e => e.AccountId.Equals(account.AccountId));
 
         if (accountOld != null)
         {
-            this._context.Accounts.Remove(accountOld);
+            _context.Accounts.Remove(accountOld);
         }
 
-        this._context.Accounts.Add(account);
-        this._context.Credits.Add(credit);
+        _context.Accounts.Add(account);
+        _context.Credits.Add(credit);
 
         await Task.CompletedTask
             .ConfigureAwait(false);
@@ -124,17 +124,17 @@ public sealed class AccountRepositoryFake : IAccountRepository
     /// <inheritdoc />
     public async Task Update(Account account, Debit debit)
     {
-        Account accountOld = this._context
+        Account accountOld = _context
             .Accounts
             .SingleOrDefault(e => e.AccountId.Equals(account.AccountId));
 
         if (accountOld != null)
         {
-            this._context.Accounts.Remove(accountOld);
-            this._context.Accounts.Add(account);
+            _context.Accounts.Remove(accountOld);
+            _context.Accounts.Add(account);
         }
 
-        this._context.Debits.Add(debit);
+        _context.Debits.Add(debit);
 
         await Task.CompletedTask
             .ConfigureAwait(false);

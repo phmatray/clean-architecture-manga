@@ -13,16 +13,16 @@ public sealed class TransferPresenter : IOutputPort
     public bool InvalidOutput { get; private set; }
     public bool NotFoundOutput { get; private set; }
     public bool OutOfFundsOutput { get; private set; }
-    public void Invalid() => this.InvalidOutput = true;
-    public void NotFound() => this.NotFoundOutput = true;
+    public void Invalid() => InvalidOutput = true;
+    public void NotFound() => NotFoundOutput = true;
 
     public void Ok(Account originAccount, Debit debit, Account destinationAccount, Credit credit)
     {
-        this.OriginAccount = originAccount;
-        this.Debit = debit;
-        this.DestinationAccount = destinationAccount;
-        this.Credit = credit;
+        OriginAccount = originAccount;
+        Debit = debit;
+        DestinationAccount = destinationAccount;
+        Credit = credit;
     }
 
-    public void OutOfFunds() => this.OutOfFundsOutput = true;
+    public void OutOfFunds() => OutOfFundsOutput = true;
 }

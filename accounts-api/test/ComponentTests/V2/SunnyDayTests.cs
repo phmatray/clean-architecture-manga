@@ -11,11 +11,11 @@ using Xunit;
 public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly CustomWebApplicationFactory _factory;
-    public SunnyDayTests(CustomWebApplicationFactory factory) => this._factory = factory;
+    public SunnyDayTests(CustomWebApplicationFactory factory) => _factory = factory;
 
     private async Task<Tuple<Guid, decimal>> GetAccounts()
     {
-        HttpClient client = this._factory.CreateClient();
+        HttpClient client = _factory.CreateClient();
         HttpResponseMessage actualResponse = await client
             .GetAsync("/api/v1/Accounts/")
             .ConfigureAwait(false);
@@ -39,7 +39,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
 
     private async Task GetAccount(string accountId)
     {
-        HttpClient client = this._factory.CreateClient();
+        HttpClient client = _factory.CreateClient();
         await client.GetAsync($"/api/v2/Accounts/{accountId}")
             .ConfigureAwait(false);
     }
@@ -47,9 +47,9 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task GetAccounts_GetAccount()
     {
-        Tuple<Guid, decimal> account = await this.GetAccounts()
+        Tuple<Guid, decimal> account = await GetAccounts()
             .ConfigureAwait(false);
-        await this.GetAccount(account.Item1.ToString())
+        await GetAccount(account.Item1.ToString())
             .ConfigureAwait(false);
     }
 }

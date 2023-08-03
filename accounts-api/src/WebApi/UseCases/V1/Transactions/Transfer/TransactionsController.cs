@@ -33,20 +33,20 @@ public sealed class TransactionsController : ControllerBase, IOutputPort
 
     private IActionResult _viewModel;
 
-    public TransactionsController(Notification notification) => this._notification = notification;
+    public TransactionsController(Notification notification) => _notification = notification;
 
-    void IOutputPort.OutOfFunds() => this._viewModel = this.BadRequest("Out of funds.");
+    void IOutputPort.OutOfFunds() => _viewModel = BadRequest("Out of funds.");
 
     void IOutputPort.Invalid()
     {
-        ValidationProblemDetails problemDetails = new ValidationProblemDetails(this._notification.ModelState);
-        this._viewModel = this.BadRequest(problemDetails);
+        ValidationProblemDetails problemDetails = new ValidationProblemDetails(_notification.ModelState);
+        _viewModel = BadRequest(problemDetails);
     }
 
-    void IOutputPort.NotFound() => this._viewModel = this.NotFound();
+    void IOutputPort.NotFound() => _viewModel = NotFound();
 
     void IOutputPort.Ok(Account originAccount, Debit debit, Account destinationAccount, Credit credit) =>
-        this._viewModel = this.Ok(new TransferResponse(new DebitModel(debit)));
+        _viewModel = Ok(new TransferResponse(new DebitModel(debit)));
 
     /// <summary>
     ///     Transfer to an account.
@@ -82,6 +82,6 @@ public sealed class TransactionsController : ControllerBase, IOutputPort
                 currency)
             .ConfigureAwait(false);
 
-        return this._viewModel!;
+        return _viewModel!;
     }
 }

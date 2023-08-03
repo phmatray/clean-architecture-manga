@@ -10,13 +10,13 @@ public sealed class WithdrawPresenter : IOutputPort
     public bool InvalidOutput { get; private set; }
     public bool NotFoundOutput { get; private set; }
     public bool OutOfFundsOutput { get; private set; }
-    public void Invalid() => this.InvalidOutput = true;
-    public void NotFound() => this.NotFoundOutput = true;
-    public void OutOfFunds() => this.OutOfFundsOutput = true;
+    public void Invalid() => InvalidOutput = true;
+    public void NotFound() => NotFoundOutput = true;
+    public void OutOfFunds() => OutOfFundsOutput = true;
 
     public void Ok(Debit debit, Account account)
     {
-        this.Account = account;
-        this.Debit = debit;
+        Account = account;
+        Debit = debit;
     }
 }

@@ -11,12 +11,12 @@ public sealed class StandardFixture
 {
     public StandardFixture()
     {
-        this.Context = new MangaContextFake();
-        this.AccountRepositoryFake = new AccountRepositoryFake(this.Context);
-        this.UnitOfWork = new UnitOfWorkFake();
-        this.EntityFactory = new EntityFactory();
-        this.TestUserService = new TestUserService();
-        this.CurrencyExchangeFake = new CurrencyExchangeFake();
+        Context = new MangaContextFake();
+        AccountRepositoryFake = new AccountRepositoryFake(Context);
+        UnitOfWork = new UnitOfWorkFake();
+        EntityFactory = new EntityFactory();
+        TestUserService = new TestUserService();
+        CurrencyExchangeFake = new CurrencyExchangeFake();
     }
 
     public EntityFactory EntityFactory { get; }

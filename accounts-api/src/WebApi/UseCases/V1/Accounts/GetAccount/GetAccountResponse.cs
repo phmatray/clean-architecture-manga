@@ -12,7 +12,7 @@ public sealed class GetAccountResponse
     /// <summary>
     ///     The Get Account Response constructor.
     /// </summary>
-    public GetAccountResponse(Account account) => this.Account = new AccountDetailsModel(account);
+    public GetAccountResponse(Account account) => Account = new AccountDetailsModel(account);
 
     /// <summary>
     ///     Gets account ID.

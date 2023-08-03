@@ -21,29 +21,29 @@ public sealed class GetAccountUseCase : IGetAccountUseCase
     /// <param name="accountRepository">Account Repository.</param>
     public GetAccountUseCase(IAccountRepository accountRepository)
     {
-        this._accountRepository = accountRepository;
-        this._outputPort = new GetAccountPresenter();
+        _accountRepository = accountRepository;
+        _outputPort = new GetAccountPresenter();
     }
 
     /// <inheritdoc />
-    public void SetOutputPort(IOutputPort outputPort) => this._outputPort = outputPort;
+    public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
 
     /// <inheritdoc />
     public Task Execute(Guid accountId) =>
-        this.GetAccountInternal(new AccountId(accountId));
+        GetAccountInternal(new AccountId(accountId));
 
     private async Task GetAccountInternal(AccountId accountId)
     {
-        IAccount account = await this._accountRepository
+        IAccount account = await _accountRepository
             .GetAccount(accountId)
             .ConfigureAwait(false);
 
         if (account is Account getAccount)
         {
-            this._outputPort.Ok(getAccount);
+            _outputPort.Ok(getAccount);
             return;
         }
 
-        this._outputPort.NotFound();
+        _outputPort.NotFound();
     }
 }

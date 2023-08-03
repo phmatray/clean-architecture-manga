@@ -14,11 +14,11 @@ public sealed class DebitModel
     /// </summary>
     public DebitModel(Debit credit)
     {
-        this.TransactionId = credit.DebitId.Id;
-        this.Amount = credit.Amount.Amount;
-        this.Currency = credit.Amount.Currency.Code;
-        this.Description = "Debit";
-        this.TransactionDate = credit.TransactionDate;
+        TransactionId = credit.DebitId.Id;
+        Amount = credit.Amount.Amount;
+        Currency = credit.Amount.Currency.Code;
+        Description = "Debit";
+        TransactionDate = credit.TransactionDate;
     }
 
     /// <summary>

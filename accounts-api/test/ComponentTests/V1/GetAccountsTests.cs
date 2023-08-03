@@ -13,12 +13,12 @@ using Xunit;
 public sealed class GetAccountsTests
 {
     private readonly CustomWebApplicationFactoryFixture _fixture;
-    public GetAccountsTests(CustomWebApplicationFactoryFixture fixture) => this._fixture = fixture;
+    public GetAccountsTests(CustomWebApplicationFactoryFixture fixture) => _fixture = fixture;
 
     [Fact]
     public async Task GetAccountsReturnsList()
     {
-        HttpClient client = this._fixture
+        HttpClient client = _fixture
             .CustomWebApplicationFactory
             .CreateClient();
 

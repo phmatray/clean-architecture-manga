@@ -41,16 +41,16 @@ public sealed class MangaContextFake
         account.CreditsCollection.Add(credit);
         account.DebitsCollection.Add(debit);
 
-        this.Accounts.Add(account);
-        this.Credits.Add(credit);
-        this.Debits.Add(debit);
+        Accounts.Add(account);
+        Credits.Add(credit);
+        Debits.Add(debit);
 
         Account account2 = new Account(
             SeedData.SecondAccountId,
             SeedData.SecondExternalUserId,
             Currency.Dollar);
 
-        this.Accounts.Add(account2);
+        Accounts.Add(account2);
     }
 
     /// <summary>

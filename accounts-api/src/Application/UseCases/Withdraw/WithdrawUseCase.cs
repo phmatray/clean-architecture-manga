@@ -36,67 +36,67 @@ public sealed class WithdrawUseCase : IWithdrawUseCase
         IUserService userService,
         ICurrencyExchange currencyExchange)
     {
-        this._accountRepository = accountRepository;
-        this._unitOfWork = unitOfWork;
-        this._accountFactory = accountFactory;
-        this._userService = userService;
-        this._currencyExchange = currencyExchange;
-        this._outputPort = new WithdrawPresenter();
+        _accountRepository = accountRepository;
+        _unitOfWork = unitOfWork;
+        _accountFactory = accountFactory;
+        _userService = userService;
+        _currencyExchange = currencyExchange;
+        _outputPort = new WithdrawPresenter();
     }
 
     /// <inheritdoc />
-    public void SetOutputPort(IOutputPort outputPort) => this._outputPort = outputPort;
+    public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
 
     /// <inheritdoc />
     public Task Execute(Guid accountId, decimal amount, string currency) =>
-        this.Withdraw(
+        Withdraw(
             new AccountId(accountId),
             new Money(amount, new Currency(currency)));
 
     private async Task Withdraw(AccountId accountId, Money withdrawAmount)
     {
-        string externalUserId = this._userService
+        string externalUserId = _userService
             .GetCurrentUserId();
 
-        IAccount account = await this._accountRepository
+        IAccount account = await _accountRepository
             .Find(accountId, externalUserId)
             .ConfigureAwait(false);
 
         if (account is Account withdrawAccount)
         {
             Money localCurrencyAmount =
-                await this._currencyExchange
+                await _currencyExchange
                     .Convert(withdrawAmount, withdrawAccount.Currency)
                     .ConfigureAwait(false);
 
-            Debit debit = this._accountFactory
+            Debit debit = _accountFactory
                 .NewDebit(withdrawAccount, localCurrencyAmount, DateTime.Now);
 
             if (withdrawAccount.GetCurrentBalance().Subtract(debit.Amount).Amount < 0)
             {
-                this._outputPort?.OutOfFunds();
+                _outputPort?.OutOfFunds();
                 return;
             }
 
-            await this.Withdraw(withdrawAccount, debit)
+            await Withdraw(withdrawAccount, debit)
                 .ConfigureAwait(false);
 
-            this._outputPort.Ok(debit, withdrawAccount);
+            _outputPort.Ok(debit, withdrawAccount);
             return;
         }
 
-        this._outputPort.NotFound();
+        _outputPort.NotFound();
     }
 
     private async Task Withdraw(Account account, Debit debit)
     {
         account.Withdraw(debit);
 
-        await this._accountRepository
+        await _accountRepository
             .Update(account, debit)
             .ConfigureAwait(false);
 
-        await this._unitOfWork
+        await _unitOfWork
             .Save()
             .ConfigureAwait(false);
     }

@@ -16,15 +16,15 @@ public readonly struct Currency : IEquatable<Currency>
     public string Code { get; }
 
     public Currency(string code) =>
-        this.Code = code;
+        Code = code;
 
     public override bool Equals(object? obj) =>
-        obj is Currency o && this.Equals(o);
+        obj is Currency o && Equals(o);
 
-    public bool Equals(Currency other) => this.Code == other.Code;
+    public bool Equals(Currency other) => Code == other.Code;
 
     public override int GetHashCode() =>
-        HashCode.Combine(this.Code);
+        HashCode.Combine(Code);
 
     public static bool operator ==(Currency left, Currency right) => left.Equals(right);
 
@@ -66,5 +66,5 @@ public readonly struct Currency : IEquatable<Currency>
     /// <returns>Currency.</returns>
     public static readonly Currency Krona = new Currency("SEK");
 
-    public override string ToString() => this.Code;
+    public override string ToString() => Code;
 }

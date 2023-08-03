@@ -20,19 +20,19 @@ public readonly struct DebitId : IEquatable<DebitId>
     public Guid Id { get; }
 
     public DebitId(Guid id) =>
-        this.Id = id;
+        Id = id;
 
     public override bool Equals(object? obj) =>
-        obj is DebitId o && this.Equals(o);
+        obj is DebitId o && Equals(o);
 
-    public bool Equals(DebitId other) => this.Id == other.Id;
+    public bool Equals(DebitId other) => Id == other.Id;
 
     public override int GetHashCode() =>
-        HashCode.Combine(this.Id);
+        HashCode.Combine(Id);
 
     public static bool operator ==(DebitId left, DebitId right) => left.Equals(right);
 
     public static bool operator !=(DebitId left, DebitId right) => !(left == right);
 
-    public override string ToString() => this.Id.ToString();
+    public override string ToString() => Id.ToString();
 }

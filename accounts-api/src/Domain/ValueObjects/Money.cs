@@ -20,28 +20,28 @@ public readonly struct Money : IEquatable<Money>
     public Currency Currency { get; }
 
     public Money(decimal amount, Currency currency) =>
-        (this.Amount, this.Currency) = (amount, currency);
+        (Amount, Currency) = (amount, currency);
 
     public override bool Equals(object? obj) =>
-        obj is Money o && this.Equals(o);
+        obj is Money o && Equals(o);
 
     public bool Equals(Money other) =>
-        this.Amount == other.Amount &&
-        this.Currency == other.Currency;
+        Amount == other.Amount &&
+        Currency == other.Currency;
 
     public override int GetHashCode() =>
-        HashCode.Combine(this.Amount, this.Currency);
+        HashCode.Combine(Amount, Currency);
 
     public static bool operator ==(Money left, Money right) => left.Equals(right);
 
     public static bool operator !=(Money left, Money right) => !(left == right);
 
-    public bool IsZero() => this.Amount == 0;
+    public bool IsZero() => Amount == 0;
 
     public Money Subtract(Money debit) =>
-        new Money(Math.Round(this.Amount - debit.Amount, 2), this.Currency);
+        new Money(Math.Round(Amount - debit.Amount, 2), Currency);
 
-    public Money Add(Money amount) => new Money(Math.Round(this.Amount + amount.Amount, 2), this.Currency);
+    public Money Add(Money amount) => new Money(Math.Round(Amount + amount.Amount, 2), Currency);
 
-    public override string ToString() => string.Format($"{this.Amount} {this.Currency}");
+    public override string ToString() => string.Format($"{Amount} {Currency}");
 }

@@ -30,14 +30,14 @@ public sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOption
     ///     The <see cref="IApiVersionDescriptionProvider">provider</see> used to generate Swagger
     ///     documents.
     /// </param>
-    public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) => this._provider = provider;
+    public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) => _provider = provider;
 
     /// <inheritdoc />
     public void Configure(SwaggerGenOptions options)
     {
         // add a swagger document for each discovered API version
         // note: you might choose to skip or document deprecated API versions differently
-        foreach (ApiVersionDescription description in this._provider.ApiVersionDescriptions)
+        foreach (ApiVersionDescription description in _provider.ApiVersionDescriptions)
         {
             options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
         }

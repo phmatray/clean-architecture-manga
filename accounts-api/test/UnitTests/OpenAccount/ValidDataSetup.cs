@@ -6,8 +6,8 @@ internal sealed class ValidDataSetup : TheoryData<decimal, string>
 {
     public ValidDataSetup()
     {
-        this.Add(100, "SEK");
-        this.Add(25, "BRL");
-        this.Add(10, "USD");
+        Add(100, "SEK");
+        Add(25, "BRL");
+        Add(10, "USD");
     }
 }

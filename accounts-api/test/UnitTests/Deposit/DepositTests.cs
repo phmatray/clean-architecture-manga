@@ -12,7 +12,7 @@ public sealed class DepositTests : IClassFixture<StandardFixture>
 {
     private readonly StandardFixture _fixture;
 
-    public DepositTests(StandardFixture fixture) => this._fixture = fixture;
+    public DepositTests(StandardFixture fixture) => _fixture = fixture;
 
     [Theory]
     [ClassData(typeof(ValidDataSetup))]
@@ -20,10 +20,10 @@ public sealed class DepositTests : IClassFixture<StandardFixture>
     {
         DepositPresenter presenter = new DepositPresenter();
         DepositUseCase sut = new DepositUseCase(
-            this._fixture.AccountRepositoryFake,
-            this._fixture.UnitOfWork,
-            this._fixture.EntityFactory,
-            this._fixture.CurrencyExchangeFake);
+            _fixture.AccountRepositoryFake,
+            _fixture.UnitOfWork,
+            _fixture.EntityFactory,
+            _fixture.CurrencyExchangeFake);
 
         sut.SetOutputPort(presenter);
 
@@ -44,10 +44,10 @@ public sealed class DepositTests : IClassFixture<StandardFixture>
         DepositPresenter presenter = new DepositPresenter();
 
         DepositUseCase depositUseCase = new DepositUseCase(
-            this._fixture.AccountRepositoryFake,
-            this._fixture.UnitOfWork,
-            this._fixture.EntityFactory,
-            this._fixture.CurrencyExchangeFake);
+            _fixture.AccountRepositoryFake,
+            _fixture.UnitOfWork,
+            _fixture.EntityFactory,
+            _fixture.CurrencyExchangeFake);
 
         DepositValidationUseCase sut = new DepositValidationUseCase(
             depositUseCase, notification);

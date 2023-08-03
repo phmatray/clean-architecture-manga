@@ -33,57 +33,57 @@ public sealed class DepositUseCase : IDepositUseCase
         IAccountFactory accountFactory,
         ICurrencyExchange currencyExchange)
     {
-        this._accountRepository = accountRepository;
-        this._unitOfWork = unitOfWork;
-        this._accountFactory = accountFactory;
-        this._currencyExchange = currencyExchange;
-        this._outputPort = new DepositPresenter();
+        _accountRepository = accountRepository;
+        _unitOfWork = unitOfWork;
+        _accountFactory = accountFactory;
+        _currencyExchange = currencyExchange;
+        _outputPort = new DepositPresenter();
     }
 
     /// <inheritdoc />
-    public void SetOutputPort(IOutputPort outputPort) => this._outputPort = outputPort;
+    public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
 
     /// <inheritdoc />
     public Task Execute(Guid accountId, decimal amount, string currency) =>
-        this.Deposit(
+        Deposit(
             new AccountId(accountId),
             new Money(amount, new Currency(currency)));
 
     private async Task Deposit(AccountId accountId, Money amount)
     {
-        IAccount account = await this._accountRepository
+        IAccount account = await _accountRepository
             .GetAccount(accountId)
             .ConfigureAwait(false);
 
         if (account is Account depositAccount)
         {
             Money convertedAmount =
-                await this._currencyExchange
+                await _currencyExchange
                     .Convert(amount, depositAccount.Currency)
                     .ConfigureAwait(false);
 
-            Credit credit = this._accountFactory
+            Credit credit = _accountFactory
                 .NewCredit(depositAccount, convertedAmount, DateTime.Now);
 
-            await this.Deposit(depositAccount, credit)
+            await Deposit(depositAccount, credit)
                 .ConfigureAwait(false);
 
-            this._outputPort.Ok(credit, depositAccount);
+            _outputPort.Ok(credit, depositAccount);
             return;
         }
 
-        this._outputPort.NotFound();
+        _outputPort.NotFound();
     }
 
     private async Task Deposit(Account account, Credit credit)
     {
         account.Deposit(credit);
 
-        await this._accountRepository
+        await _accountRepository
             .Update(account, credit)
             .ConfigureAwait(false);
 
-        await this._unitOfWork
+        await _unitOfWork
             .Save()
             .ConfigureAwait(false);
     }
