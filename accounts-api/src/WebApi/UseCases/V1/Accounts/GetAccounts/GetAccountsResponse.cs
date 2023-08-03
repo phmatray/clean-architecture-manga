@@ -26,5 +26,5 @@ public sealed class GetAccountsResponse
     ///     Accounts
     /// </summary>
     [Required]
-    public List<AccountModel> Accounts { get; } = new List<AccountModel>();
+    public List<AccountModel> Accounts { get; } = new();
 }

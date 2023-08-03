@@ -21,7 +21,7 @@ public sealed class CurrencyExchangeService : ICurrencyExchange
 
     private readonly IHttpClientFactory _httpClientFactory;
 
-    private readonly Dictionary<Currency, decimal> _usdRates = new Dictionary<Currency, decimal>();
+    private readonly Dictionary<Currency, decimal> _usdRates = new();
 
     public CurrencyExchangeService(IHttpClientFactory httpClientFactory) =>
         _httpClientFactory = httpClientFactory;

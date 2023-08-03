@@ -34,37 +34,37 @@ public readonly struct Currency : IEquatable<Currency>
     ///     Dollar.
     /// </summary>
     /// <returns>Currency.</returns>
-    public static readonly Currency Dollar = new Currency("USD");
+    public static readonly Currency Dollar = new("USD");
 
     /// <summary>
     ///     Euro.
     /// </summary>
     /// <returns>Currency.</returns>
-    public static readonly Currency Euro = new Currency("EUR");
+    public static readonly Currency Euro = new("EUR");
 
     /// <summary>
     ///     British Pound.
     /// </summary>
     /// <returns>Currency.</returns>
-    public static readonly Currency BritishPound = new Currency("GBP");
+    public static readonly Currency BritishPound = new("GBP");
 
     /// <summary>
     ///     Canadian Dollar.
     /// </summary>
     /// <returns>Currency.</returns>
-    public static readonly Currency Canadian = new Currency("CAD");
+    public static readonly Currency Canadian = new("CAD");
 
     /// <summary>
     ///     Brazilian Real.
     /// </summary>
     /// <returns>Currency.</returns>
-    public static readonly Currency Real = new Currency("BRL");
+    public static readonly Currency Real = new("BRL");
 
     /// <summary>
     ///     Swedish Krona.
     /// </summary>
     /// <returns>Currency.</returns>
-    public static readonly Currency Krona = new Currency("SEK");
+    public static readonly Currency Krona = new("SEK");
 
     public override string ToString() => Code;
 }

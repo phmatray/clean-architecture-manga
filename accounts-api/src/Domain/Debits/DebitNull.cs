@@ -17,7 +17,7 @@ using ValueObjects;
 /// </summary>
 public sealed class DebitNull : IDebit
 {
-    public static DebitNull Instance { get; } = new DebitNull();
-    public DebitId DebitId { get; } = new DebitId(Guid.Empty);
-    public Money Amount { get; } = new Money(0, new Currency(string.Empty));
+    public static DebitNull Instance { get; } = new();
+    public DebitId DebitId { get; } = new(Guid.Empty);
+    public Money Amount { get; } = new(0, new Currency(string.Empty));
 }

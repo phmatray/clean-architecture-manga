@@ -10,8 +10,8 @@ using Domain.ValueObjects;
 /// </summary>
 public sealed class CurrencyExchangeFake : ICurrencyExchange
 {
-    private readonly Dictionary<Currency, decimal> _usdRates = new Dictionary<Currency, decimal>
-        {
+    private readonly Dictionary<Currency, decimal> _usdRates = new()
+    {
             {Currency.Dollar, 1m},
             {Currency.Euro, 0.89021m},
             {Currency.Canadian, 1.35737m},

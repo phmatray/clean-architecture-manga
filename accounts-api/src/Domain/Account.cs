@@ -26,12 +26,12 @@ public class Account : IAccount
     /// <summary>
     ///     Gets the Credits List.
     /// </summary>
-    public CreditsCollection CreditsCollection { get; } = new CreditsCollection();
+    public CreditsCollection CreditsCollection { get; } = new();
 
     /// <summary>
     ///     Gets the Debits List.
     /// </summary>
-    public DebitsCollection DebitsCollection { get; } = new DebitsCollection();
+    public DebitsCollection DebitsCollection { get; } = new();
 
     /// <summary>
     ///     Gets the Currency.

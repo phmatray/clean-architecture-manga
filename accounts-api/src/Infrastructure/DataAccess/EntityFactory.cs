@@ -22,14 +22,14 @@ public sealed class EntityFactory : IAccountFactory
 {
     /// <inheritdoc />
     public Account NewAccount(string externalUserId, Currency currency)
-        => new Account(new AccountId(Guid.NewGuid()), externalUserId, currency);
+        => new(new AccountId(Guid.NewGuid()), externalUserId, currency);
 
     /// <inheritdoc />
     public Credit NewCredit(
         Account account,
         Money amountToDeposit,
         DateTime transactionDate) =>
-        new Credit(new CreditId(Guid.NewGuid()), account.AccountId, transactionDate,
+        new(new CreditId(Guid.NewGuid()), account.AccountId, transactionDate,
             amountToDeposit.Amount, amountToDeposit.Currency.Code);
 
     /// <inheritdoc />
@@ -37,6 +37,6 @@ public sealed class EntityFactory : IAccountFactory
         Account account,
         Money amountToWithdraw,
         DateTime transactionDate) =>
-        new Debit(new DebitId(Guid.NewGuid()), account.AccountId, transactionDate, amountToWithdraw.Amount,
+        new(new DebitId(Guid.NewGuid()), account.AccountId, transactionDate, amountToWithdraw.Amount,
             amountToWithdraw.Currency.Code);
 }

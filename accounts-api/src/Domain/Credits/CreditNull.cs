@@ -17,7 +17,7 @@ using ValueObjects;
 /// </summary>
 public sealed class CreditNull : ICredit
 {
-    public static CreditNull Instance { get; } = new CreditNull();
-    public CreditId CreditId { get; } = new CreditId(Guid.Empty);
-    public Money Amount { get; } = new Money(0, new Currency(string.Empty));
+    public static CreditNull Instance { get; } = new();
+    public CreditId CreditId { get; } = new(Guid.Empty);
+    public Money Amount { get; } = new(0, new Currency(string.Empty));
 }

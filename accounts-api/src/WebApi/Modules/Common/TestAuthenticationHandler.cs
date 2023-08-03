@@ -29,8 +29,8 @@ public sealed class TestAuthenticationHandler : AuthenticationHandler<Authentica
     {
         Claim[] claims =
         {
-                new Claim(ClaimTypes.NameIdentifier, "test"), new Claim(ClaimTypes.Name, "test"),
-                new Claim("id", "92b93e37-0995-4849-a7ed-149e8706d8ef")
+                new(ClaimTypes.NameIdentifier, "test"), new(ClaimTypes.Name, "test"),
+                new("id", "92b93e37-0995-4849-a7ed-149e8706d8ef")
             };
 
         var identity = new ClaimsIdentity(claims, Scheme.Name);

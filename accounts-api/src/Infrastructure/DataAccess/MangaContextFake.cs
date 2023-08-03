@@ -56,15 +56,15 @@ public sealed class MangaContextFake
     /// <summary>
     ///     Gets or sets Accounts.
     /// </summary>
-    public Collection<Account> Accounts { get; } = new Collection<Account>();
+    public Collection<Account> Accounts { get; } = new();
 
     /// <summary>
     ///     Gets or sets Credits.
     /// </summary>
-    public Collection<Credit> Credits { get; } = new Collection<Credit>();
+    public Collection<Credit> Credits { get; } = new();
 
     /// <summary>
     ///     Gets or sets Debits.
     /// </summary>
-    public Collection<Debit> Debits { get; } = new Collection<Debit>();
+    public Collection<Debit> Debits { get; } = new();
 }

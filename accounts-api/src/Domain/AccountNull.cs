@@ -12,10 +12,10 @@ using ValueObjects;
 /// <inheritdoc />
 public sealed class AccountNull : IAccount
 {
-    public static AccountNull Instance { get; } = new AccountNull();
+    public static AccountNull Instance { get; } = new();
 
     /// <inheritdoc />
-    public AccountId AccountId => new AccountId(Guid.Empty);
+    public AccountId AccountId => new(Guid.Empty);
 
     /// <inheritdoc />
     public void Deposit(Credit credit)
@@ -33,5 +33,5 @@ public sealed class AccountNull : IAccount
     public bool IsClosingAllowed() => false;
 
     /// <inheritdoc />
-    public Money GetCurrentBalance() => new Money(0, new Currency());
+    public Money GetCurrentBalance() => new(0, new Currency());
 }

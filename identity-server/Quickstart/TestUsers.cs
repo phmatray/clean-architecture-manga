@@ -26,7 +26,7 @@ public class TestUsers
 
             return new List<TestUser>
                 {
-                    new TestUser
+                    new()
                     {
                         SubjectId = "818727",
                         Username = "alice",
@@ -43,7 +43,7 @@ public class TestUsers
                                 IdentityServerConstants.ClaimValueTypes.Json)
                         }
                     },
-                    new TestUser
+                    new()
                     {
                         SubjectId = "88421113",
                         Username = "bob",

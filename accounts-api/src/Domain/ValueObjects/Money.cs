@@ -38,10 +38,10 @@ public readonly struct Money : IEquatable<Money>
 
     public bool IsZero() => Amount == 0;
 
-    public Money Subtract(Money debit) =>
-        new Money(Math.Round(Amount - debit.Amount, 2), Currency);
+    public Money Subtract(Money debit)
+        => new(Math.Round(Amount - debit.Amount, 2), Currency);
 
-    public Money Add(Money amount) => new Money(Math.Round(Amount + amount.Amount, 2), Currency);
+    public Money Add(Money amount) => new(Math.Round(Amount + amount.Amount, 2), Currency);
 
     public override string ToString() => string.Format($"{Amount} {Currency}");
 }
