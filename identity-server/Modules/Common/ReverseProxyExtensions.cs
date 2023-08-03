@@ -1,9 +1,3 @@
-using IdentityServer4.Extensions;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace IdentityServer.Modules.Common;
 
 using IdentityServer4.Extensions;

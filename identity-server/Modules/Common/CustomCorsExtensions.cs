@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace IdentityServer.Modules.Common;
 
 using Microsoft.AspNetCore.Builder;

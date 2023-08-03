@@ -4,7 +4,6 @@
 
 namespace Application.UseCases.GetAccounts;
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain;
 using Services;

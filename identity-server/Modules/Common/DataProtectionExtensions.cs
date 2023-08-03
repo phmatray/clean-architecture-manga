@@ -1,7 +1,3 @@
-using System.IO;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace IdentityServer.Modules.Common;
 
 using System.IO;
