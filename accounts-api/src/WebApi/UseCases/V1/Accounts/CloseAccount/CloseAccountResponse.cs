@@ -7,16 +7,11 @@ using Domain;
 /// <summary>
 ///     The response Close an Account.
 /// </summary>
-public sealed class CloseAccountResponse
+public sealed class CloseAccountResponse(Account account)
 {
-    /// <summary>
-    ///     Close Account Response constructor.
-    /// </summary>
-    public CloseAccountResponse(Account account) => AccountId = account.AccountId.Id;
-
     /// <summary>
     ///     Gets account ID.
     /// </summary>
     [Required]
-    public Guid AccountId { get; }
+    public Guid AccountId { get; } = account.AccountId.Id;
 }

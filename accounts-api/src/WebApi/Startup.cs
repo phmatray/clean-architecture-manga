@@ -15,33 +15,27 @@ using Prometheus;
 /// <summary>
 ///     Startup.
 /// </summary>
-public sealed class Startup
+public sealed class Startup(IConfiguration configuration)
 {
-    /// <summary>
-    ///     Startup constructor.
-    /// </summary>
-    public Startup(IConfiguration configuration) => Configuration = configuration;
-
-    private IConfiguration Configuration { get; }
-
     /// <summary>
     ///     Configure dependencies from application.
     /// </summary>
-    public void ConfigureServices(IServiceCollection services) =>
-        services
-            .AddFeatureFlags(Configuration) // should be the first one.
-            .AddInvalidRequestLogging()
-            .AddCurrencyExchange(Configuration)
-            .AddSQLServer(Configuration)
-            .AddHealthChecks(Configuration)
-            .AddAuthentication(Configuration)
-            .AddVersioning()
-            .AddSwagger()
-            .AddUseCases()
-            .AddCustomControllers()
-            .AddCustomCors()
-            .AddProxy()
-            .AddCustomDataProtection();
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddFeatureFlags(configuration); // should be the first one.
+        services.AddInvalidRequestLogging();
+        services.AddCurrencyExchange(configuration);
+        services.AddSQLServer(configuration);
+        services.AddHealthChecks(configuration);
+        services.AddAuthentication(configuration);
+        services.AddVersioning();
+        services.AddSwagger();
+        services.AddUseCases();
+        services.AddCustomControllers();
+        services.AddCustomCors();
+        services.AddProxy();
+        services.AddCustomDataProtection();
+    }
 
     /// <summary>
     ///     Configure http request pipeline.
@@ -57,23 +51,23 @@ public sealed class Startup
         }
         else
         {
-            app.UseExceptionHandler("/api/V1/CustomError")
-                .UseHsts();
+            app.UseExceptionHandler("/api/V1/CustomError");
+            app.UseHsts();
         }
 
-        app
-            .UseProxy(Configuration)
-            .UseHealthChecks()
-            .UseCustomCors()
-            .UseCustomHttpMetrics()
-            .UseRouting()
-            .UseVersionedSwagger(provider, Configuration, env)
-            .UseAuthentication()
-            .UseAuthorization()
-            .UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-                endpoints.MapMetrics();
-            });
+        app.UseProxy(configuration);
+        app.UseHealthChecks();
+        app.UseCustomCors();
+        app.UseCustomHttpMetrics();
+        app.UseRouting();
+        app.UseVersionedSwagger(provider, configuration, env);
+        app.UseAuthentication();
+        app.UseAuthorization();
+        
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapMetrics();
+        });
     }
 }

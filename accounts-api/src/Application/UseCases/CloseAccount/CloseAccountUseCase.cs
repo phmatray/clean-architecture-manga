@@ -11,46 +11,28 @@ using Domain.ValueObjects;
 using Services;
 
 /// <inheritdoc />
-public sealed class CloseAccountUseCase : ICloseAccountUseCase
+public sealed class CloseAccountUseCase(
+    IAccountRepository accountRepository,
+    IUserService userService,
+    IUnitOfWork unitOfWork)
+    : ICloseAccountUseCase
 {
-    private readonly IAccountRepository _accountRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IUserService _userService;
-
-    private IOutputPort _outputPort;
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="CloseAccountUseCase" /> class.
-    /// </summary>
-    /// <param name="accountRepository">Account Repository.</param>
-    /// <param name="userService">User Service.</param>
-    /// <param name="unitOfWork"></param>
-    public CloseAccountUseCase(
-        IAccountRepository accountRepository,
-        IUserService userService,
-        IUnitOfWork unitOfWork)
-    {
-        _accountRepository = accountRepository;
-        _userService = userService;
-        _unitOfWork = unitOfWork;
-        _outputPort = new CloseAccountPresenter();
-    }
+    private IOutputPort _outputPort = new CloseAccountPresenter();
 
     /// <inheritdoc />
-    public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
+    public void SetOutputPort(IOutputPort outputPort)
+        => _outputPort = outputPort;
 
     /// <inheritdoc />
     public Task Execute(Guid accountId)
     {
-        string externalUserId = _userService
-            .GetCurrentUserId();
-
+        string externalUserId = userService.GetCurrentUserId();
         return CloseAccountInternal(new AccountId(accountId), externalUserId);
     }
 
     private async Task CloseAccountInternal(AccountId accountId, string externalUserId)
     {
-        IAccount account = await _accountRepository
+        IAccount account = await accountRepository
             .Find(accountId, externalUserId)
             .ConfigureAwait(false);
 
@@ -72,13 +54,13 @@ public sealed class CloseAccountUseCase : ICloseAccountUseCase
         _outputPort.NotFound();
     }
 
-    private async Task Close(Account closeAccount)
+    private async Task Close(IAccount closeAccount)
     {
-        await _accountRepository
+        await accountRepository
             .Delete(closeAccount.AccountId)
             .ConfigureAwait(false);
 
-        await _unitOfWork
+        await unitOfWork
             .Save()
             .ConfigureAwait(false);
     }

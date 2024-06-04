@@ -11,16 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-public class Startup
+public class Startup(IWebHostEnvironment environment, IConfiguration configuration)
 {
-    public Startup(IWebHostEnvironment environment, IConfiguration configuration)
-    {
-        Environment = environment;
-        Configuration = configuration;
-    }
-
-    public IWebHostEnvironment Environment { get; }
-    public IConfiguration Configuration { get; }
+    public IWebHostEnvironment Environment { get; } = environment;
+    public IConfiguration Configuration { get; } = configuration;
 
     public void ConfigureServices(IServiceCollection services)
     {

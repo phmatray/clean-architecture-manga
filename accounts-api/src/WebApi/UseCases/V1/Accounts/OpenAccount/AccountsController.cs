@@ -35,10 +35,11 @@ public sealed class AccountsController(Notification notification)
         _viewModel = BadRequest(problemDetails);
     }
 
-    void IOutputPort.NotFound() => _viewModel = NotFound();
+    void IOutputPort.NotFound()
+        => _viewModel = NotFound();
 
-    void IOutputPort.Ok(Account account) =>
-        _viewModel = Ok(new OpenAccountResponse(new AccountModel(account)));
+    void IOutputPort.Ok(Account account)
+        => _viewModel = Ok(new OpenAccountResponse(new AccountModel(account)));
 
     /// <summary>
     ///     Open an account.
@@ -58,15 +59,12 @@ public sealed class AccountsController(Notification notification)
 #pragma warning disable SCS0016 // Controller method is potentially vulnerable to Cross Site Request Forgery (CSRF).
     public async Task<IActionResult> Post(
 #pragma warning restore SCS0016 // Controller method is potentially vulnerable to Cross Site Request Forgery (CSRF).
-            [FromServices] IOpenAccountUseCase useCase,
+        [FromServices] IOpenAccountUseCase useCase,
         [FromForm][Required] decimal amount,
         [FromForm][Required] string currency)
     {
         useCase.SetOutputPort(this);
-
-        await useCase.Execute(amount, currency)
-            .ConfigureAwait(false);
-
+        await useCase.Execute(amount, currency).ConfigureAwait(false);
         return _viewModel!;
     }
 }

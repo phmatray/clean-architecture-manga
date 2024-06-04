@@ -34,8 +34,7 @@ public sealed class TransactionsController(Notification notification)
 
     void IOutputPort.OutOfFunds()
     {
-        var messages = new Dictionary<string, string[]> { { "", new[] { "Out of funds." } } };
-
+        var messages = new Dictionary<string, string[]> { { "", ["Out of funds."] } };
         var problemDetails = new ValidationProblemDetails(messages);
         _viewModel = BadRequest(problemDetails);
     }
@@ -46,10 +45,11 @@ public sealed class TransactionsController(Notification notification)
         _viewModel = BadRequest(problemDetails);
     }
 
-    void IOutputPort.NotFound() => _viewModel = NotFound();
+    void IOutputPort.NotFound()
+        => _viewModel = NotFound();
 
-    void IOutputPort.Ok(Debit debit, Account account) =>
-        _viewModel = Ok(new WithdrawResponse(new DebitModel(debit)));
+    void IOutputPort.Ok(Debit debit, Account account)
+        => _viewModel = Ok(new WithdrawResponse(new DebitModel(debit)));
 
     /// <summary>
     ///     Withdraw on an account.
@@ -69,16 +69,13 @@ public sealed class TransactionsController(Notification notification)
 #pragma warning disable SCS0016 // Controller method is potentially vulnerable to Cross Site Request Forgery (CSRF).
     public async Task<IActionResult> Withdraw(
 #pragma warning restore SCS0016 // Controller method is potentially vulnerable to Cross Site Request Forgery (CSRF).
-            [FromServices] IWithdrawUseCase useCase,
+        [FromServices] IWithdrawUseCase useCase,
         [FromRoute][Required] Guid accountId,
         [FromForm][Required] decimal amount,
         [FromForm][Required] string currency)
     {
         useCase.SetOutputPort(this);
-
-        await useCase.Execute(accountId, amount, currency)
-            .ConfigureAwait(false);
-
+        await useCase.Execute(accountId, amount, currency).ConfigureAwait(false);
         return _viewModel!;
     }
 }

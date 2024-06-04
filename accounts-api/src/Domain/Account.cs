@@ -20,12 +20,12 @@ public class Account(AccountId accountId, string externalUserId, Currency curren
     /// <summary>
     ///     Gets the Credits List.
     /// </summary>
-    public CreditsCollection CreditsCollection { get; } = new();
+    public CreditsCollection CreditsCollection { get; } = [];
 
     /// <summary>
     ///     Gets the Debits List.
     /// </summary>
-    public DebitsCollection DebitsCollection { get; } = new();
+    public DebitsCollection DebitsCollection { get; } = [];
 
     /// <summary>
     ///     Gets the Currency.
@@ -42,20 +42,14 @@ public class Account(AccountId accountId, string externalUserId, Currency curren
     public void Withdraw(Debit debit) => DebitsCollection.Add(debit);
 
     /// <inheritdoc />
-    public bool IsClosingAllowed() => GetCurrentBalance()
-        .IsZero();
+    public bool IsClosingAllowed() => GetCurrentBalance().IsZero();
 
     /// <inheritdoc />
     public Money GetCurrentBalance()
     {
-        Money totalCredits = CreditsCollection
-            .GetTotal();
-
-        Money totalDebits = DebitsCollection
-            .GetTotal();
-
-        Money totalAmount = totalCredits
-            .Subtract(totalDebits);
+        Money totalCredits = CreditsCollection.GetTotal();
+        Money totalDebits = DebitsCollection.GetTotal();
+        Money totalAmount = totalCredits.Subtract(totalDebits);
 
         return totalAmount;
     }

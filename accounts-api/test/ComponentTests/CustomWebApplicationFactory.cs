@@ -7,17 +7,24 @@ using Microsoft.Extensions.Configuration;
 using WebApi;
 
 /// <summary>
+///     Custom WebApplicationFactory for testing.
 /// </summary>
-public sealed class CustomWebApplicationFactory : WebApplicationFactory<Startup>
+public sealed class CustomWebApplicationFactory
+    : WebApplicationFactory<Startup>
 {
-    protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureAppConfiguration(
-        (context, config) =>
-        {
-            config.AddInMemoryCollection(
-                new Dictionary<string, string>
-                {
-                    ["FeatureManagement:SQLServer"] = "false",
-                    ["FeatureManagement:CurrencyExchangeModule"] = "false"
-                });
-        });
+    private static IReadOnlyDictionary<string, string> DefaultFeatures => new Dictionary<string, string>
+    {
+        ["FeatureManagement:SQLServer"] = "false",
+        ["FeatureManagement:CurrencyExchangeModule"] = "false"
+    };
+
+    /// <summary>
+    /// Configures the web host by adding in-memory configuration.
+    /// </summary>
+    /// <param name="builder">The IWebHostBuilder instance to configure.</param>
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.ConfigureAppConfiguration(
+            (context, config) => config.AddInMemoryCollection(DefaultFeatures));
+    }
 }

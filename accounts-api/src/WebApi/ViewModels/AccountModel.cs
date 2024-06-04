@@ -7,35 +7,23 @@ using Domain;
 /// <summary>
 ///     Account Details.
 /// </summary>
-public sealed class AccountModel
+public sealed class AccountModel(Account account)
 {
-    /// <summary>
-    ///     Account Details constructor.
-    /// </summary>
-    public AccountModel(Account account)
-    {
-        AccountId = account.AccountId.Id;
-        CurrentBalance = account
-            .GetCurrentBalance()
-            .Amount;
-        Currency = account.Currency.Code;
-    }
-
     /// <summary>
     ///     Gets account ID.
     /// </summary>
     [Required]
-    public Guid AccountId { get; }
+    public Guid AccountId { get; } = account.AccountId.Id;
 
     /// <summary>
     ///     Gets current Balance.
     /// </summary>
     [Required]
-    public decimal CurrentBalance { get; }
+    public decimal CurrentBalance { get; } = account.GetCurrentBalance().Amount;
 
     /// <summary>
     ///     Gets current Balance.
     /// </summary>
     [Required]
-    public string Currency { get; }
+    public string Currency { get; } = account.Currency.Code;
 }

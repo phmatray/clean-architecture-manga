@@ -32,7 +32,8 @@ public sealed class TransactionsController(Notification notification)
 {
     private IActionResult _viewModel;
 
-    void IOutputPort.OutOfFunds() => _viewModel = BadRequest("Out of funds.");
+    void IOutputPort.OutOfFunds()
+        => _viewModel = BadRequest("Out of funds.");
 
     void IOutputPort.Invalid()
     {
@@ -40,10 +41,11 @@ public sealed class TransactionsController(Notification notification)
         _viewModel = BadRequest(problemDetails);
     }
 
-    void IOutputPort.NotFound() => _viewModel = NotFound();
+    void IOutputPort.NotFound()
+        => _viewModel = NotFound();
 
-    void IOutputPort.Ok(Account originAccount, Debit debit, Account destinationAccount, Credit credit) =>
-        _viewModel = Ok(new TransferResponse(new DebitModel(debit)));
+    void IOutputPort.Ok(Account originAccount, Debit debit, Account destinationAccount, Credit credit)
+        => _viewModel = Ok(new TransferResponse(new DebitModel(debit)));
 
     /// <summary>
     ///     Transfer to an account.
@@ -64,21 +66,14 @@ public sealed class TransactionsController(Notification notification)
 #pragma warning disable SCS0016 // Controller method is potentially vulnerable to Cross Site Request Forgery (CSRF).
     public async Task<IActionResult> Transfer(
 #pragma warning restore SCS0016 // Controller method is potentially vulnerable to Cross Site Request Forgery (CSRF).
-            [FromServices] ITransferUseCase useCase,
+        [FromServices] ITransferUseCase useCase,
         [FromRoute][Required] Guid accountId,
         [FromRoute][Required] Guid destinationAccountId,
         [FromForm][Required] decimal amount,
         [FromForm][Required] string currency)
     {
         useCase.SetOutputPort(this);
-
-        await useCase.Execute(
-                accountId,
-                destinationAccountId,
-                amount,
-                currency)
-            .ConfigureAwait(false);
-
+        await useCase.Execute(accountId, destinationAccountId, amount, currency).ConfigureAwait(false);
         return _viewModel!;
     }
 }

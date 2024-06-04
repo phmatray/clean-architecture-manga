@@ -70,9 +70,9 @@ public class ConsentController : Controller
 
         if (result.HasValidationError) ModelState.AddModelError(string.Empty, result.ValidationError);
 
-        if (result.ShowView) return View("Index", result.ViewModel);
-
-        return View("Error");
+        return result.ShowView
+            ? View("Index", result.ViewModel)
+            : View("Error");
     }
 
     /*****************************************/
@@ -164,7 +164,7 @@ public class ConsentController : Controller
         var vm = new ConsentViewModel
         {
             RememberConsent = model?.RememberConsent ?? true,
-            ScopesConsented = model?.ScopesConsented ?? Enumerable.Empty<string>(),
+            ScopesConsented = model?.ScopesConsented ?? [],
             Description = model?.Description,
             ReturnUrl = returnUrl,
             ClientName = request.Client.ClientName ?? request.Client.ClientId,

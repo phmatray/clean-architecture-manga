@@ -1,3 +1,5 @@
+using FluentAssertions;
+
 namespace ComponentTests.V1;
 
 using System;
@@ -10,38 +12,30 @@ using Newtonsoft.Json.Linq;
 using Xunit;
 
 [Collection("WebApi Collection")]
-public sealed class GetAccountsTests
+public sealed class GetAccountsTests(CustomWebApplicationFactoryFixture fixture)
 {
-    private readonly CustomWebApplicationFactoryFixture _fixture;
-    public GetAccountsTests(CustomWebApplicationFactoryFixture fixture) => _fixture = fixture;
-
     [Fact]
     public async Task GetAccountsReturnsList()
     {
-        HttpClient client = _fixture
+        HttpClient client = fixture
             .CustomWebApplicationFactory
             .CreateClient();
 
-        HttpResponseMessage actualResponse = await client
-            .GetAsync("/api/v1/Accounts/")
-            .ConfigureAwait(false);
+        HttpResponseMessage actualResponse = await client.GetAsync("/api/v1/Accounts/");
+        string actualResponseString = await actualResponse.Content.ReadAsStringAsync();
 
-        string actualResponseString = await actualResponse.Content
-            .ReadAsStringAsync()
-            .ConfigureAwait(false);
-
-        Assert.Equal(HttpStatusCode.OK, actualResponse.StatusCode);
+        actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         using var stringReader = new StringReader(actualResponseString);
-        using var reader = new JsonTextReader(stringReader) { DateParseHandling = DateParseHandling.None };
-        JObject jsonResponse = await JObject.LoadAsync(reader)
-            .ConfigureAwait(false);
+        await using var reader = new JsonTextReader(stringReader);
+        reader.DateParseHandling = DateParseHandling.None;
+        
+        JObject jsonResponse = await JObject.LoadAsync(reader);
 
-        Assert.Equal(JTokenType.String, jsonResponse["accounts"]![0]!["accountId"]!.Type);
-        Assert.Equal(JTokenType.Integer, jsonResponse["accounts"]![0]!["currentBalance"]!.Type);
+        jsonResponse["accounts"]![0]!["accountId"]!.Type.Should().Be(JTokenType.String);
+        jsonResponse["accounts"]![0]!["currentBalance"]!.Type.Should().Be(JTokenType.Integer);
 
-        Assert.True(Guid.TryParse(jsonResponse["accounts"]![0]!["accountId"]!.Value<string>(), out Guid _));
-        Assert.True(decimal.TryParse(jsonResponse["accounts"]![0]!["currentBalance"]!.Value<string>(),
-            out decimal _));
+        Guid.TryParse(jsonResponse["accounts"]![0]!["accountId"]!.Value<string>(), out _).Should().BeTrue();
+        decimal.TryParse(jsonResponse["accounts"]![0]!["currentBalance"]!.Value<string>(), out _).Should().BeTrue();
     }
 }

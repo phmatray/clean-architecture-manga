@@ -10,15 +10,13 @@ using Infrastructure.DataAccess;
 using Infrastructure.DataAccess.Repositories;
 using Xunit;
 
-public sealed class AccountRepositoryTests : IClassFixture<StandardFixture>
+public sealed class AccountRepositoryTests(StandardFixture fixture)
+    : IClassFixture<StandardFixture>
 {
-    private readonly StandardFixture _fixture;
-    public AccountRepositoryTests(StandardFixture fixture) => _fixture = fixture;
-
     [Fact]
     public async Task Add()
     {
-        var accountRepository = new AccountRepository(_fixture.Context);
+        var accountRepository = new AccountRepository(fixture.Context);
 
         var account = new Account(
             new AccountId(Guid.NewGuid()),
@@ -34,21 +32,15 @@ public sealed class AccountRepositoryTests : IClassFixture<StandardFixture>
             "USD"
         );
 
-        await accountRepository
-            .Add(account, credit)
-            .ConfigureAwait(false);
+        await accountRepository.Add(account, credit);
+        await fixture.Context.SaveChangesAsync();
 
-        await _fixture
-            .Context
-            .SaveChangesAsync()
-            .ConfigureAwait(false);
-
-        bool hasAnyAccount = _fixture
+        bool hasAnyAccount = fixture
             .Context
             .Accounts
             .Any(e => e.AccountId == account.AccountId);
 
-        bool hasAnyCredit = _fixture
+        bool hasAnyCredit = fixture
             .Context
             .Credits
             .Any(e => e.CreditId == credit.CreditId);
@@ -59,7 +51,7 @@ public sealed class AccountRepositoryTests : IClassFixture<StandardFixture>
     [Fact]
     public async Task Delete()
     {
-        var accountRepository = new AccountRepository(_fixture.Context);
+        var accountRepository = new AccountRepository(fixture.Context);
 
         var account = new Account(
             new AccountId(Guid.NewGuid()),
@@ -75,30 +67,18 @@ public sealed class AccountRepositoryTests : IClassFixture<StandardFixture>
             "USD"
         );
 
-        await accountRepository
-            .Add(account, credit)
-            .ConfigureAwait(false);
+        await accountRepository.Add(account, credit);
+        await fixture.Context.SaveChangesAsync();
 
-        await _fixture
-            .Context
-            .SaveChangesAsync()
-            .ConfigureAwait(false);
+        await accountRepository.Delete(account.AccountId);
+        await fixture.Context.SaveChangesAsync();
 
-        await accountRepository
-            .Delete(account.AccountId)
-            .ConfigureAwait(false);
-
-        await _fixture
-            .Context
-            .SaveChangesAsync()
-            .ConfigureAwait(false);
-
-        bool hasAnyAccount = _fixture
+        bool hasAnyAccount = fixture
             .Context
             .Accounts
             .Any(e => e.AccountId == account.AccountId);
 
-        bool hasAnyCredit = _fixture
+        bool hasAnyCredit = fixture
             .Context
             .Credits
             .Any(e => e.CreditId == credit.CreditId);

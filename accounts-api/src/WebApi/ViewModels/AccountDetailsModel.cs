@@ -9,47 +9,35 @@ using Domain;
 /// <summary>
 ///     Account Details.
 /// </summary>
-public sealed class AccountDetailsModel
+public sealed class AccountDetailsModel(Account account)
 {
-    /// <summary>
-    ///     Account Details constructor.
-    /// </summary>
-    public AccountDetailsModel(Account account)
-    {
-        AccountId = account.AccountId.Id;
-        CurrentBalance = account.GetCurrentBalance().Amount;
-        Credits = account
-            .CreditsCollection
-            .Select(e => new CreditModel(e))
-            .ToList();
-
-        Debits = account
-            .DebitsCollection
-            .Select(e => new DebitModel(e))
-            .ToList();
-    }
-
     /// <summary>
     ///     Gets account ID.
     /// </summary>
     [Required]
-    public Guid AccountId { get; }
+    public Guid AccountId { get; } = account.AccountId.Id;
 
     /// <summary>
     ///     Gets current Balance.
     /// </summary>
     [Required]
-    public decimal CurrentBalance { get; }
+    public decimal CurrentBalance { get; } = account.GetCurrentBalance().Amount;
 
     /// <summary>
     ///     Gets Credits.
     /// </summary>
     [Required]
-    public List<CreditModel> Credits { get; }
+    public List<CreditModel> Credits { get; } = account
+        .CreditsCollection
+        .Select(e => new CreditModel(e))
+        .ToList();
 
     /// <summary>
     ///     Gets Debits.
     /// </summary>
     [Required]
-    public List<DebitModel> Debits { get; }
+    public List<DebitModel> Debits { get; } = account
+        .DebitsCollection
+        .Select(e => new DebitModel(e))
+        .ToList();
 }

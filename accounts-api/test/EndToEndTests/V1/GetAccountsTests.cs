@@ -6,21 +6,16 @@ using System.Threading.Tasks;
 using Xunit;
 
 [Collection("WebApi Collection")]
-public sealed class GetAccountsTests
+public sealed class GetAccountsTests(CustomWebApplicationFactoryFixture fixture)
 {
-    private readonly CustomWebApplicationFactoryFixture _fixture;
-    public GetAccountsTests(CustomWebApplicationFactoryFixture fixture) => _fixture = fixture;
-
     [Fact]
     public async Task GetAccountsReturnsList()
     {
-        HttpClient client = _fixture
+        HttpClient client = fixture
             .CustomWebApplicationFactory
             .CreateClient();
 
-        HttpResponseMessage actualResponse = await client
-            .GetAsync("/api/v1/Accounts/")
-            .ConfigureAwait(false);
+        HttpResponseMessage actualResponse = await client.GetAsync("/api/v1/Accounts/");
 
         Assert.Equal(HttpStatusCode.OK, actualResponse.StatusCode);
     }

@@ -15,13 +15,13 @@ using Microsoft.EntityFrameworkCore;
 /// </summary>
 public static class SeedData
 {
-    public static readonly string DefaultExternalUserId = "197d0438-e04b-453d-b5de-eca05960c6ae";
+    public const string DefaultExternalUserId = "197d0438-e04b-453d-b5de-eca05960c6ae";
 
     public static readonly AccountId DefaultAccountId = new(new Guid("4c510cfe-5d61-4a46-a3d9-c4313426655f"));
 
     public static readonly AccountId SecondAccountId = new(new Guid("E82D2EA6-E9D3-444D-A22F-9D65F2F2C65E"));
 
-    public static readonly string SecondExternalUserId = "C70E69BF-EDC7-48E3-BF33-B424F7464C5F";
+    public const string SecondExternalUserId = "C70E69BF-EDC7-48E3-BF33-B424F7464C5F";
 
     public static readonly CreditId DefaultCreditId = new(new Guid("7BF066BA-379A-4E72-A59B-9755FDA432CE"));
 

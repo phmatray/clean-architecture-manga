@@ -164,7 +164,7 @@ public class ExternalController : Controller
 
     // if the external login is OIDC-based, there are certain things we need to preserve to make logout work
     // this will be different for WS-Fed, SAML2p or other protocols
-    private void ProcessLoginCallback(AuthenticateResult externalResult, List<Claim> localClaims,
+    private void ProcessLoginCallback(AuthenticateResult externalResult, ICollection<Claim> localClaims,
         AuthenticationProperties localSignInProps)
     {
         // if the external system sent a session id claim, copy it over

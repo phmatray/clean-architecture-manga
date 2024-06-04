@@ -13,23 +13,16 @@ public sealed class Notification
     private readonly IDictionary<string, IList<string>> _errorMessages = new Dictionary<string, IList<string>>();
 
     public IDictionary<string, string[]> ModelState
-    {
-        get
-        {
-            var modelState = _errorMessages
-                .ToDictionary(item => item.Key, item => item.Value.ToArray());
-
-            return modelState;
-        }
-    }
-
+        => _errorMessages.ToDictionary(item => item.Key, item => item.Value.ToArray());
 
     /// <summary>
     ///     Returns true when it does not contains error messages.
     /// </summary>
-    public bool IsValid => _errorMessages.Count == 0;
+    public bool IsValid
+        => _errorMessages.Count == 0;
 
-    public bool IsInvalid => _errorMessages.Count > 0;
+    public bool IsInvalid
+        => _errorMessages.Count > 0;
 
     /// <summary>
     /// </summary>

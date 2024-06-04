@@ -7,16 +7,11 @@ using ViewModels;
 /// <summary>
 ///     Get Account Response.
 /// </summary>
-public sealed class GetAccountResponse
+public sealed class GetAccountResponse(Account account)
 {
-    /// <summary>
-    ///     The Get Account Response constructor.
-    /// </summary>
-    public GetAccountResponse(Account account) => Account = new AccountDetailsModel(account);
-
     /// <summary>
     ///     Gets account ID.
     /// </summary>
     [Required]
-    public AccountDetailsModel Account { get; }
+    public AccountDetailsModel Account { get; } = new(account);
 }

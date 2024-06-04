@@ -10,13 +10,15 @@ using System;
 using System.Threading.Tasks;
 using Application.Services;
 
+/// <inheritdoc cref="Application.Services.IUnitOfWork" />
 public sealed class UnitOfWork(DbContext context)
     : IUnitOfWork, IDisposable
 {
     private bool _disposed;
 
     /// <inheritdoc />
-    public void Dispose() => Dispose(true);
+    public void Dispose()
+        => Dispose(true);
 
     /// <inheritdoc />
     public async Task<int> Save()
@@ -24,6 +26,7 @@ public sealed class UnitOfWork(DbContext context)
         int affectedRows = await context
             .SaveChangesAsync()
             .ConfigureAwait(false);
+        
         return affectedRows;
     }
 

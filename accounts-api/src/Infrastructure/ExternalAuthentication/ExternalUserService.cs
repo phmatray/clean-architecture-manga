@@ -16,17 +16,13 @@ public sealed class ExternalUserService : IUserService
     /// <summary>
     /// </summary>
     /// <param name="httpContextAccessor"></param>
-    public ExternalUserService(
-        IHttpContextAccessor httpContextAccessor) =>
-        _httpContextAccessor = httpContextAccessor;
+    public ExternalUserService(IHttpContextAccessor httpContextAccessor)
+        => _httpContextAccessor = httpContextAccessor;
 
     /// <inheritdoc />
     public string GetCurrentUserId()
     {
-        ClaimsPrincipal user = _httpContextAccessor
-                .HttpContext!
-            .User;
-
+        ClaimsPrincipal user = _httpContextAccessor.HttpContext!.User;
         string id = user.FindFirst("sub")?.Value!;
         return id;
     }

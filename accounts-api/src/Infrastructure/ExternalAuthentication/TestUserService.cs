@@ -11,5 +11,6 @@ using DataAccess;
 public sealed class TestUserService : IUserService
 {
     /// <inheritdoc />
-    public string GetCurrentUserId() => SeedData.DefaultExternalUserId;
+    public string GetCurrentUserId()
+        => SeedData.DefaultExternalUserId;
 }

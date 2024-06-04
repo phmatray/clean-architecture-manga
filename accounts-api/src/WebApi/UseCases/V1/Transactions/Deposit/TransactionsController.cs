@@ -37,10 +37,11 @@ public sealed class TransactionsController(Notification notification)
         _viewModel = BadRequest(problemDetails);
     }
 
-    void IOutputPort.NotFound() => _viewModel = NotFound();
+    void IOutputPort.NotFound()
+        => _viewModel = NotFound();
 
-    void IOutputPort.Ok(Credit credit, Account account) =>
-        _viewModel = Ok(new DepositResponse(new CreditModel(credit)));
+    void IOutputPort.Ok(Credit credit, Account account)
+        => _viewModel = Ok(new DepositResponse(new CreditModel(credit)));
 
     /// <summary>
     ///     Deposit on an account.
@@ -60,16 +61,13 @@ public sealed class TransactionsController(Notification notification)
 #pragma warning disable SCS0016 // Controller method is potentially vulnerable to Cross Site Request Forgery (CSRF).
     public async Task<IActionResult> Deposit(
 #pragma warning restore SCS0016 // Controller method is potentially vulnerable to Cross Site Request Forgery (CSRF).
-            [FromServices] IDepositUseCase useCase,
+        [FromServices] IDepositUseCase useCase,
         [FromRoute][Required] Guid accountId,
         [FromForm][Required] decimal amount,
         [FromForm][Required] string currency)
     {
         useCase.SetOutputPort(this);
-
-        await useCase.Execute(accountId, amount, currency)
-            .ConfigureAwait(false);
-
+        await useCase.Execute(accountId, amount, currency).ConfigureAwait(false);
         return _viewModel!;
     }
 }

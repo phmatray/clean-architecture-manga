@@ -9,29 +9,23 @@ using Microsoft.Extensions.Options;
 
 /// <summary>
 /// </summary>
-public sealed class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+public sealed class TestAuthenticationHandler(
+    IOptionsMonitor<AuthenticationSchemeOptions> options,
+    ILoggerFactory logger,
+    UrlEncoder encoder)
+    : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
 {
-    /// <summary>
-    /// </summary>
-    /// <param name="options"></param>
-    /// <param name="logger"></param>
-    /// <param name="encoder"></param>
-    /// <param name="clock"></param>
-    public TestAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
-        UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
-    {
-    }
-
     /// <summary>
     /// </summary>
     /// <returns></returns>
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         Claim[] claims =
-        {
-                new(ClaimTypes.NameIdentifier, "test"), new(ClaimTypes.Name, "test"),
-                new("id", "92b93e37-0995-4849-a7ed-149e8706d8ef")
-            };
+        [
+            new Claim(ClaimTypes.NameIdentifier, "test"),
+            new Claim(ClaimTypes.Name, "test"),
+            new Claim("id", "92b93e37-0995-4849-a7ed-149e8706d8ef")
+        ];
 
         var identity = new ClaimsIdentity(claims, Scheme.Name);
         var principal = new ClaimsPrincipal(identity);

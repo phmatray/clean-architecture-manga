@@ -9,27 +9,18 @@ using System.Threading.Tasks;
 using Services;
 
 /// <inheritdoc />
-public sealed class GetAccountValidationUseCase : IGetAccountUseCase
+public sealed class GetAccountValidationUseCase(
+    IGetAccountUseCase useCase,
+    Notification notification)
+    : IGetAccountUseCase
 {
-    private readonly Notification _notification;
-    private readonly IGetAccountUseCase _useCase;
-    private IOutputPort _outputPort;
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="GetAccountValidationUseCase" /> class.
-    /// </summary>
-    public GetAccountValidationUseCase(IGetAccountUseCase useCase, Notification notification)
-    {
-        _useCase = useCase;
-        _notification = notification;
-        _outputPort = new GetAccountPresenter();
-    }
+    private IOutputPort _outputPort = new GetAccountPresenter();
 
     /// <inheritdoc />
     public void SetOutputPort(IOutputPort outputPort)
     {
         _outputPort = outputPort;
-        _useCase.SetOutputPort(outputPort);
+        useCase.SetOutputPort(outputPort);
     }
 
     /// <inheritdoc />
@@ -37,18 +28,16 @@ public sealed class GetAccountValidationUseCase : IGetAccountUseCase
     {
         if (accountId == Guid.Empty)
         {
-            _notification
-                .Add(nameof(accountId), "AccountId is required.");
+            notification.Add(nameof(accountId), "AccountId is required.");
         }
 
-        if (_notification
-            .IsInvalid)
+        if (notification.IsInvalid)
         {
             _outputPort.Invalid();
             return;
         }
 
-        await _useCase
+        await useCase
             .Execute(accountId)
             .ConfigureAwait(false);
     }

@@ -6,16 +6,11 @@ using ViewModels;
 /// <summary>
 ///     Transfer Response.
 /// </summary>
-public sealed class TransferResponse
+public sealed class TransferResponse(DebitModel transaction)
 {
-    /// <summary>
-    ///     Transfer Response constructor.
-    /// </summary>
-    public TransferResponse(DebitModel transaction) => Transaction = transaction;
-
     /// <summary>
     ///     Gets Transaction.
     /// </summary>
     [Required]
-    public DebitModel Transaction { get; }
+    public DebitModel Transaction { get; } = transaction;
 }

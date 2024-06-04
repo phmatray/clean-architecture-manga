@@ -7,47 +7,35 @@ using Domain.Credits;
 /// <summary>
 ///     Credit.
 /// </summary>
-public sealed class CreditModel
+public sealed class CreditModel(Credit credit)
 {
-    /// <summary>
-    ///     Credit constructor.
-    /// </summary>
-    public CreditModel(Credit credit)
-    {
-        TransactionId = credit.CreditId.Id;
-        Amount = credit.Amount.Amount;
-        Currency = credit.Amount.Currency.Code;
-        Description = "Credit";
-        TransactionDate = credit.TransactionDate;
-    }
-
     /// <summary>
     ///     Gets the TransactionId.
     /// </summary>
     [Required]
-    public Guid TransactionId { get; }
+    public Guid TransactionId { get; } = credit.CreditId.Id;
 
     /// <summary>
     ///     Gets the Amount.
     /// </summary>
     [Required]
-    public decimal Amount { get; }
+    public decimal Amount { get; } = credit.Amount.Amount;
 
     /// <summary>
     ///     Gets the Currency.
     /// </summary>
     [Required]
-    public string Currency { get; }
+    public string Currency { get; } = credit.Amount.Currency.Code;
 
     /// <summary>
     ///     Gets the Description.
     /// </summary>
     [Required]
-    public string Description { get; }
+    public string Description { get; } = "Credit";
 
     /// <summary>
     ///     Gets the Transaction Date.
     /// </summary>
     [Required]
-    public DateTime TransactionDate { get; }
+    public DateTime TransactionDate { get; } = credit.TransactionDate;
 }

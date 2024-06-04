@@ -21,10 +21,7 @@ public sealed class CreditConfiguration : IEntityTypeConfiguration<Credit>
     /// <param name="builder">Builder.</param>
     public void Configure(EntityTypeBuilder<Credit> builder)
     {
-        if (builder == null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
+        ArgumentNullException.ThrowIfNull(builder);
 
         builder.ToTable("Credit");
 

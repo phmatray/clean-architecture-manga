@@ -35,9 +35,11 @@ public sealed class AccountsController(Notification notification)
         _viewModel = BadRequest(problemDetails);
     }
 
-    void IOutputPort.NotFound() => _viewModel = NotFound();
+    void IOutputPort.NotFound()
+        => _viewModel = NotFound();
 
-    void IOutputPort.Ok(Account account) => _viewModel = Ok(new GetAccountResponse(account));
+    void IOutputPort.Ok(Account account)
+        => _viewModel = Ok(new GetAccountResponse(account));
 
     /// <summary>
     ///     Get an account details.
@@ -56,10 +58,7 @@ public sealed class AccountsController(Notification notification)
         [FromRoute][Required] Guid accountId)
     {
         useCase.SetOutputPort(this);
-
-        await useCase.Execute(accountId)
-            .ConfigureAwait(false);
-
+        await useCase.Execute(accountId).ConfigureAwait(false);
         return _viewModel!;
     }
 }

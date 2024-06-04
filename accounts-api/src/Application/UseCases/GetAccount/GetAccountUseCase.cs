@@ -10,31 +10,22 @@ using Domain;
 using Domain.ValueObjects;
 
 /// <inheritdoc />
-public sealed class GetAccountUseCase : IGetAccountUseCase
+public sealed class GetAccountUseCase(IAccountRepository accountRepository)
+    : IGetAccountUseCase
 {
-    private readonly IAccountRepository _accountRepository;
-    private IOutputPort _outputPort;
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="GetAccountUseCase" /> class.
-    /// </summary>
-    /// <param name="accountRepository">Account Repository.</param>
-    public GetAccountUseCase(IAccountRepository accountRepository)
-    {
-        _accountRepository = accountRepository;
-        _outputPort = new GetAccountPresenter();
-    }
+    private IOutputPort _outputPort = new GetAccountPresenter();
 
     /// <inheritdoc />
-    public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
+    public void SetOutputPort(IOutputPort outputPort)
+        => _outputPort = outputPort;
 
     /// <inheritdoc />
-    public Task Execute(Guid accountId) =>
-        GetAccountInternal(new AccountId(accountId));
+    public Task Execute(Guid accountId)
+        => GetAccountInternal(new AccountId(accountId));
 
     private async Task GetAccountInternal(AccountId accountId)
     {
-        IAccount account = await _accountRepository
+        IAccount account = await accountRepository
             .GetAccount(accountId)
             .ConfigureAwait(false);
 

@@ -38,7 +38,7 @@ public sealed class CustomControllerFeatureProvider : IApplicationFeatureProvide
                 }
 
                 CustomAttributeTypedArgument constructorArgument = customAttribute.ConstructorArguments.First();
-                if (!(constructorArgument.Value is IEnumerable arguments))
+                if (constructorArgument.Value is not IEnumerable arguments)
                 {
                     continue;
                 }

@@ -8,14 +8,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
+public sealed class SunnyDayTests(CustomWebApplicationFactory factory)
+    : IClassFixture<CustomWebApplicationFactory>
 {
-    private readonly CustomWebApplicationFactory _factory;
-    public SunnyDayTests(CustomWebApplicationFactory factory) => _factory = factory;
-
     private async Task<Tuple<Guid, decimal>> GetAccounts()
     {
-        HttpClient client = _factory.CreateClient();
+        HttpClient client = factory.CreateClient();
         HttpResponseMessage actualResponse = await client
             .GetAsync("/api/v1/Accounts/")
             .ConfigureAwait(false);
@@ -25,7 +23,8 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
             .ConfigureAwait(false);
 
         using var stringReader = new StringReader(actualResponseString);
-        using var reader = new JsonTextReader(stringReader) { DateParseHandling = DateParseHandling.None };
+        await using var reader = new JsonTextReader(stringReader);
+        reader.DateParseHandling = DateParseHandling.None;
 
         JObject jsonResponse = await JObject.LoadAsync(reader)
             .ConfigureAwait(false);
@@ -39,7 +38,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
 
     private async Task GetAccount(string accountId)
     {
-        HttpClient client = _factory.CreateClient();
+        HttpClient client = factory.CreateClient();
         await client.GetAsync($"/api/v2/Accounts/{accountId}")
             .ConfigureAwait(false);
     }
@@ -47,9 +46,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task GetAccounts_GetAccount()
     {
-        var account = await GetAccounts()
-            .ConfigureAwait(false);
-        await GetAccount(account.Item1.ToString())
-            .ConfigureAwait(false);
+        var account = await GetAccounts();
+        await GetAccount(account.Item1.ToString());
     }
 }

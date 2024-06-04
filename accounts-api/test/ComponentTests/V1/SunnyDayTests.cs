@@ -10,14 +10,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
+public sealed class SunnyDayTests(CustomWebApplicationFactory factory)
+    : IClassFixture<CustomWebApplicationFactory>
 {
-    private readonly CustomWebApplicationFactory _factory;
-    public SunnyDayTests(CustomWebApplicationFactory factory) => _factory = factory;
-
     private async Task<Tuple<Guid, decimal>> GetAccounts()
     {
-        HttpClient client = _factory.CreateClient();
+        HttpClient client = factory.CreateClient();
         HttpResponseMessage actualResponse = await client
             .GetAsync("/api/v1/Accounts/")
             .ConfigureAwait(false);
@@ -27,7 +25,8 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
             .ConfigureAwait(false);
 
         using var stringReader = new StringReader(actualResponseString);
-        using var reader = new JsonTextReader(stringReader) { DateParseHandling = DateParseHandling.None };
+        await using var reader = new JsonTextReader(stringReader);
+        reader.DateParseHandling = DateParseHandling.None;
 
         JObject jsonResponse = await JObject.LoadAsync(reader)
             .ConfigureAwait(false);
@@ -41,13 +40,14 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
 
     private async Task<Tuple<Guid, decimal>> GetAccount(string accountId)
     {
-        HttpClient client = _factory.CreateClient();
+        HttpClient client = factory.CreateClient();
         string actualResponseString = await client
             .GetStringAsync($"/api/v1/Accounts/{accountId}")
             .ConfigureAwait(false);
 
         using var stringReader = new StringReader(actualResponseString);
-        using var reader = new JsonTextReader(stringReader) { DateParseHandling = DateParseHandling.None };
+        await using var reader = new JsonTextReader(stringReader);
+        reader.DateParseHandling = DateParseHandling.None;
 
         JObject jsonResponse = await JObject.LoadAsync(reader)
             .ConfigureAwait(false);
@@ -60,7 +60,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
 
     private async Task Deposit(string account, decimal amount)
     {
-        HttpClient client = _factory.CreateClient();
+        HttpClient client = factory.CreateClient();
         var content = new FormUrlEncodedContent(new[]
         {
                 new KeyValuePair<string, string>("amount", amount.ToString(CultureInfo.InvariantCulture)),
@@ -79,7 +79,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
 
     private async Task Withdraw(string account, decimal amount)
     {
-        HttpClient client = _factory.CreateClient();
+        HttpClient client = factory.CreateClient();
 
         var content = new FormUrlEncodedContent(new[]
         {
@@ -99,7 +99,7 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
 
     private async Task Close(string account)
     {
-        HttpClient client = _factory.CreateClient();
+        HttpClient client = factory.CreateClient();
         HttpResponseMessage response = await client.DeleteAsync($"api/v1/Accounts/{account}")
             .ConfigureAwait(false);
 
@@ -113,23 +113,14 @@ public sealed class SunnyDayTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task GetAccount_Withdraw_Deposit_Withdraw_Withdraw_Close()
     {
-        var account = await GetAccounts()
-            .ConfigureAwait(false);
-        await GetAccount(account.Item1.ToString())
-            .ConfigureAwait(false);
-        await Withdraw(account.Item1.ToString(), account.Item2)
-            .ConfigureAwait(false);
-        await Deposit(account.Item1.ToString(), 500)
-            .ConfigureAwait(false);
-        await Deposit(account.Item1.ToString(), 300)
-            .ConfigureAwait(false);
-        await Withdraw(account.Item1.ToString(), 400)
-            .ConfigureAwait(false);
-        await Withdraw(account.Item1.ToString(), 400)
-            .ConfigureAwait(false);
-        account = await GetAccounts()
-            .ConfigureAwait(false);
-        await Close(account.Item1.ToString())
-            .ConfigureAwait(false);
+        var account = await GetAccounts();
+        await GetAccount(account.Item1.ToString());
+        await Withdraw(account.Item1.ToString(), account.Item2);
+        await Deposit(account.Item1.ToString(), 500);
+        await Deposit(account.Item1.ToString(), 300);
+        await Withdraw(account.Item1.ToString(), 400);
+        await Withdraw(account.Item1.ToString(), 400);
+        account = await GetAccounts();
+        await Close(account.Item1.ToString());
     }
 }

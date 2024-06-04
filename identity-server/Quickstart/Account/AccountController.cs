@@ -120,22 +120,19 @@ public class AccountController : Controller
                         ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
                     };
 
-                ;
-
                 // issue authentication cookie with subject ID and username
-                var isuser = new IdentityServerUser(user.SubjectId) { DisplayName = user.Username };
+                var isUser = new IdentityServerUser(user.SubjectId) { DisplayName = user.Username };
 
-                await HttpContext.SignInAsync(isuser, props);
+                await HttpContext.SignInAsync(isUser, props);
 
                 if (context != null)
                 {
-                    if (context.IsNativeClient())
+                    return context.IsNativeClient()
                         // The client is native, so this change in how to
                         // return the response is for better UX for the end user.
-                        return this.LoadingPage("Redirect", model.ReturnUrl);
-
-                    // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
-                    return Redirect(model.ReturnUrl);
+                        ? this.LoadingPage("Redirect", model.ReturnUrl)
+                        // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
+                        : Redirect(model.ReturnUrl);
                 }
 
                 // request for a local page

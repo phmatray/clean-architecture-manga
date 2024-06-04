@@ -50,13 +50,10 @@ public static class HealthChecksExtensions
     /// <summary>
     ///     Use Health Checks dependencies.
     /// </summary>
-    public static IApplicationBuilder UseHealthChecks(
-        this IApplicationBuilder app)
+    public static IApplicationBuilder UseHealthChecks(this IApplicationBuilder app)
     {
-        app.UseHealthChecks("/health",
-            new HealthCheckOptions { ResponseWriter = WriteResponse });
-
-        return app;
+        var options = new HealthCheckOptions { ResponseWriter = WriteResponse };
+        return app.UseHealthChecks("/health", options);
     }
 
     private static Task WriteResponse(HttpContext context, HealthReport result)

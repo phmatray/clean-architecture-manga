@@ -15,29 +15,16 @@ using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 /// <inheritdoc />
-public sealed class AccountRepository : IAccountRepository
+public sealed class AccountRepository(MangaContext context)
+    : IAccountRepository
 {
-    private readonly MangaContext _context;
-
-    /// <summary>
-    /// </summary>
-    /// <param name="context"></param>
-    public AccountRepository(MangaContext context) => _context = context ??
-                                                                      throw new ArgumentNullException(
-                                                                          nameof(context));
+    private readonly MangaContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
     /// <inheritdoc />
     public async Task Add(Account account, Credit credit)
     {
-        await _context
-            .Accounts
-            .AddAsync(account)
-            .ConfigureAwait(false);
-
-        await _context
-            .Credits
-            .AddAsync(credit)
-            .ConfigureAwait(false);
+        await _context.Accounts.AddAsync(account).ConfigureAwait(false);
+        await _context.Credits.AddAsync(credit).ConfigureAwait(false);
     }
 
     /// <inheritdoc />
@@ -69,15 +56,12 @@ public sealed class AccountRepository : IAccountRepository
             .SingleOrDefaultAsync()
             .ConfigureAwait(false);
 
-        if (account is Account findAccount)
-        {
-            await LoadTransactions(findAccount)
-                .ConfigureAwait(false);
+        if (account == null)
+            return AccountNull.Instance;
+        
+        await LoadTransactions(account).ConfigureAwait(false);
+        return account;
 
-            return account;
-        }
-
-        return AccountNull.Instance;
     }
 
     /// <inheritdoc />
@@ -101,15 +85,12 @@ public sealed class AccountRepository : IAccountRepository
             .SingleOrDefaultAsync()
             .ConfigureAwait(false);
 
-        if (account is Account findAccount)
-        {
-            await LoadTransactions(findAccount)
-                .ConfigureAwait(false);
+        if (account is null)
+            return AccountNull.Instance;
+        
+        await LoadTransactions(account).ConfigureAwait(false);
+        return account;
 
-            return account;
-        }
-
-        return AccountNull.Instance;
     }
 
     public async Task<IList<Account>> GetAccounts(string externalUserId)
@@ -122,14 +103,13 @@ public sealed class AccountRepository : IAccountRepository
 
         foreach (Account findAccount in accounts)
         {
-            await LoadTransactions(findAccount)
-                .ConfigureAwait(false);
+            await LoadTransactions(findAccount).ConfigureAwait(false);
         }
 
         return accounts;
     }
 
-    private async Task LoadTransactions(Account account)
+    private async Task LoadTransactions(IAccount account)
     {
         await _context
             .Credits

@@ -11,43 +11,31 @@ using Domain.Debits;
 using Microsoft.EntityFrameworkCore;
 
 /// <inheritdoc />
-public sealed class MangaContext : DbContext
+public sealed class MangaContext(DbContextOptions options)
+    : DbContext(options)
 {
-    /// <summary>
-    /// </summary>
-    /// <param name="options"></param>
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-    public MangaContext(DbContextOptions options)
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-            : base(options)
-    {
-    }
-
     /// <summary>
     ///     Gets or sets Accounts
     /// </summary>
-    public DbSet<Account> Accounts { get; set; }
+    public DbSet<Account> Accounts { get; init; }
 
     /// <summary>
     ///     Gets or sets Credits
     /// </summary>
-    public DbSet<Credit> Credits { get; set; }
+    public DbSet<Credit> Credits { get; init; }
 
     /// <summary>
     ///     Gets or sets Debits
     /// </summary>
-    public DbSet<Debit> Debits { get; set; }
+    public DbSet<Debit> Debits { get; init; }
 
     /// <summary>
     /// </summary>
     /// <param name="modelBuilder"></param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        if (modelBuilder is null)
-        {
-            throw new ArgumentNullException(nameof(modelBuilder));
-        }
-
+        ArgumentNullException.ThrowIfNull(modelBuilder);
+        
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MangaContext).Assembly);
         SeedData.Seed(modelBuilder);
     }

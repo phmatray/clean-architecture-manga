@@ -24,7 +24,9 @@ using Modules.Common.FeatureFlags;
 [FeatureGate(CustomFeature.CloseAccount)]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public sealed class AccountsController(ICloseAccountUseCase useCase, Notification notification)
+public sealed class AccountsController(
+    ICloseAccountUseCase useCase,
+    Notification notification)
     : ControllerBase, IOutputPort
 {
     private IActionResult _viewModel;
@@ -35,11 +37,14 @@ public sealed class AccountsController(ICloseAccountUseCase useCase, Notificatio
         _viewModel = BadRequest(problemDetails);
     }
 
-    void IOutputPort.NotFound() => _viewModel = NotFound();
+    void IOutputPort.NotFound()
+        => _viewModel = NotFound();
 
-    void IOutputPort.HasFunds() => _viewModel = BadRequest("Account has funds.");
+    void IOutputPort.HasFunds()
+        => _viewModel = BadRequest("Account has funds.");
 
-    void IOutputPort.Ok(Account account) => _viewModel = Ok(new CloseAccountResponse(account));
+    void IOutputPort.Ok(Account account)
+        => _viewModel = Ok(new CloseAccountResponse(account));
 
     /// <summary>
     ///     Close an Account.
@@ -57,10 +62,7 @@ public sealed class AccountsController(ICloseAccountUseCase useCase, Notificatio
         [FromRoute][Required] Guid accountId)
     {
         useCase.SetOutputPort(this);
-
-        await useCase.Execute(accountId)
-            .ConfigureAwait(false);
-
+        await useCase.Execute(accountId).ConfigureAwait(false);
         return _viewModel!;
     }
 }

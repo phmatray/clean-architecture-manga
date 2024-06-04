@@ -21,10 +21,7 @@ public sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
     /// <param name="builder">Builder.</param>
     public void Configure(EntityTypeBuilder<Account> builder)
     {
-        if (builder == null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
+        ArgumentNullException.ThrowIfNull(builder);
 
         builder.ToTable("Account");
 

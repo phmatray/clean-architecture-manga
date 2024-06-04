@@ -158,7 +158,7 @@ public class DeviceController : Controller
             UserCode = userCode,
             Description = model?.Description,
             RememberConsent = model?.RememberConsent ?? true,
-            ScopesConsented = model?.ScopesConsented ?? Enumerable.Empty<string>(),
+            ScopesConsented = model?.ScopesConsented ?? [],
             ClientName = request.Client.ClientName ?? request.Client.ClientId,
             ClientUrl = request.Client.ClientUri,
             ClientLogoUrl = request.Client.LogoUri,

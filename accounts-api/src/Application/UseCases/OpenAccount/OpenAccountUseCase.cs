@@ -13,34 +13,29 @@ using Services;
 
 /// <inheritdoc />
 public sealed class OpenAccountUseCase(
-        IAccountRepository accountRepository,
-        IUnitOfWork unitOfWork,
-        IUserService userService,
-        IAccountFactory accountFactory)
+    IAccountRepository accountRepository,
+    IUnitOfWork unitOfWork,
+    IUserService userService,
+    IAccountFactory accountFactory)
     : IOpenAccountUseCase
 {
     private IOutputPort _outputPort = new OpenAccountPresenter();
 
     /// <inheritdoc />
-    public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
+    public void SetOutputPort(IOutputPort outputPort)
+        => _outputPort = outputPort;
 
     /// <inheritdoc />
-    public Task Execute(decimal amount, string currency) =>
-        OpenAccount(new Money(amount, new Currency(currency)));
+    public Task Execute(decimal amount, string currency)
+        => OpenAccount(new Money(amount, new Currency(currency)));
 
     private async Task OpenAccount(Money amountToDeposit)
     {
-        string externalUserId = userService
-            .GetCurrentUserId();
+        string externalUserId = userService.GetCurrentUserId();
+        Account account = accountFactory.NewAccount(externalUserId, amountToDeposit.Currency);
+        Credit credit = accountFactory.NewCredit(account, amountToDeposit, DateTime.Now);
 
-        Account account = accountFactory
-            .NewAccount(externalUserId, amountToDeposit.Currency);
-
-        Credit credit = accountFactory
-            .NewCredit(account, amountToDeposit, DateTime.Now);
-
-        await Deposit(account, credit)
-            .ConfigureAwait(false);
+        await Deposit(account, credit).ConfigureAwait(false);
 
         _outputPort?.Ok(account);
     }

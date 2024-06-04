@@ -1,10 +1,11 @@
-﻿namespace WebApi.Modules.Common;
+﻿using Microsoft.Extensions.Logging;
+
+namespace WebApi.Modules.Common;
 
 using System.Linq;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// </summary>
@@ -32,7 +33,7 @@ public static class LoggingExtensions
                     .ToList();
 
                 string jsonModelState = JsonSerializer.Serialize(errors);
-                logger.LogWarning("Invalid request.", jsonModelState);
+                logger.LogWarning("Invalid request: {0}", jsonModelState);
 
                 var problemDetails = new ValidationProblemDetails(actionContext.ModelState);
                 return new BadRequestObjectResult(problemDetails);

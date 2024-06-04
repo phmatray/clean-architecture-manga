@@ -6,16 +6,11 @@ using ViewModels;
 /// <summary>
 ///     The response for a successful Deposit.
 /// </summary>
-public sealed class DepositResponse
+public sealed class DepositResponse(CreditModel transaction)
 {
-    /// <summary>
-    ///     The Deposit response constructor.
-    /// </summary>
-    public DepositResponse(CreditModel transaction) => Transaction = transaction;
-
     /// <summary>
     ///     Gets Transaction.
     /// </summary>
     [Required]
-    public CreditModel Transaction { get; }
+    public CreditModel Transaction { get; } = transaction;
 }

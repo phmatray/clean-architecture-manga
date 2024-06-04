@@ -27,7 +27,8 @@ public sealed class AccountsController(IGetAccountsUseCase useCase)
 {
     private IActionResult _viewModel;
 
-    void IOutputPort.Ok(IList<Account> accounts) => _viewModel = Ok(new GetAccountsResponse(accounts));
+    void IOutputPort.Ok(IList<Account> accounts)
+        => _viewModel = Ok(new GetAccountsResponse(accounts));
 
     /// <summary>
     ///     Get Accounts.
@@ -42,10 +43,7 @@ public sealed class AccountsController(IGetAccountsUseCase useCase)
     public async Task<IActionResult> Get()
     {
         useCase.SetOutputPort(this);
-
-        await useCase.Execute()
-            .ConfigureAwait(false);
-
+        await useCase.Execute().ConfigureAwait(false);
         return _viewModel!;
     }
 }

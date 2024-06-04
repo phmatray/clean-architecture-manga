@@ -21,10 +21,7 @@ public sealed class DebitConfiguration : IEntityTypeConfiguration<Debit>
     /// <param name="builder">Builder.</param>
     public void Configure(EntityTypeBuilder<Debit> builder)
     {
-        if (builder == null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
+        ArgumentNullException.ThrowIfNull(builder);
 
         builder.ToTable("Debit");
 

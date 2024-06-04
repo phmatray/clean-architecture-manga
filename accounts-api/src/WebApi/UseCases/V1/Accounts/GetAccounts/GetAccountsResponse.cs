@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace WebApi.UseCases.V1.Accounts.GetAccounts;
 
 using System.Collections.Generic;
@@ -8,23 +10,13 @@ using ViewModels;
 /// <summary>
 ///     Get Accounts Response.
 /// </summary>
-public sealed class GetAccountsResponse
+public sealed class GetAccountsResponse(IEnumerable<Account> accounts)
 {
-    /// <summary>
-    ///     The Get Accounts Response constructor.
-    /// </summary>
-    public GetAccountsResponse(IEnumerable<Account> accounts)
-    {
-        foreach (Account account in accounts)
-        {
-            var accountModel = new AccountModel(account);
-            Accounts.Add(accountModel);
-        }
-    }
-
     /// <summary>
     ///     Accounts
     /// </summary>
     [Required]
-    public List<AccountModel> Accounts { get; } = new();
+    public List<AccountModel> Accounts { get; } = accounts
+        .Select(account => new AccountModel(account))
+        .ToList();
 }

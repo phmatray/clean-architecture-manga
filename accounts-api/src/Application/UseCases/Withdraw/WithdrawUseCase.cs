@@ -12,64 +12,43 @@ using Domain.ValueObjects;
 using Services;
 
 /// <inheritdoc />
-public sealed class WithdrawUseCase : IWithdrawUseCase
+public sealed class WithdrawUseCase(
+    IAccountRepository accountRepository,
+    IUnitOfWork unitOfWork,
+    IAccountFactory accountFactory,
+    IUserService userService,
+    ICurrencyExchange currencyExchange)
+    : IWithdrawUseCase
 {
-    private readonly IAccountFactory _accountFactory;
-    private readonly IAccountRepository _accountRepository;
-    private readonly ICurrencyExchange _currencyExchange;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IUserService _userService;
-    private IOutputPort _outputPort;
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="WithdrawUseCase" /> class.
-    /// </summary>
-    /// <param name="accountRepository">Account Repository.</param>
-    /// <param name="unitOfWork">Unit Of Work.</param>
-    /// <param name="accountFactory"></param>
-    /// <param name="userService"></param>
-    /// <param name="currencyExchange"></param>
-    public WithdrawUseCase(
-        IAccountRepository accountRepository,
-        IUnitOfWork unitOfWork,
-        IAccountFactory accountFactory,
-        IUserService userService,
-        ICurrencyExchange currencyExchange)
-    {
-        _accountRepository = accountRepository;
-        _unitOfWork = unitOfWork;
-        _accountFactory = accountFactory;
-        _userService = userService;
-        _currencyExchange = currencyExchange;
-        _outputPort = new WithdrawPresenter();
-    }
+    private IOutputPort _outputPort = new WithdrawPresenter();
 
     /// <inheritdoc />
-    public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
+    public void SetOutputPort(IOutputPort outputPort)
+        => _outputPort = outputPort;
 
     /// <inheritdoc />
-    public Task Execute(Guid accountId, decimal amount, string currency) =>
-        Withdraw(
+    public Task Execute(Guid accountId, decimal amount, string currency)
+        => Withdraw(
             new AccountId(accountId),
             new Money(amount, new Currency(currency)));
 
     private async Task Withdraw(AccountId accountId, Money withdrawAmount)
     {
-        string externalUserId = _userService
+        string externalUserId = userService
             .GetCurrentUserId();
 
-        IAccount account = await _accountRepository
+        IAccount account = await accountRepository
             .Find(accountId, externalUserId)
             .ConfigureAwait(false);
 
         if (account is Account withdrawAccount)
         {
             Money localCurrencyAmount =
-                await _currencyExchange
+                await currencyExchange
                     .Convert(withdrawAmount, withdrawAccount.Currency)
                     .ConfigureAwait(false);
 
-            Debit debit = _accountFactory
+            Debit debit = accountFactory
                 .NewDebit(withdrawAccount, localCurrencyAmount, DateTime.Now);
 
             if (withdrawAccount.GetCurrentBalance().Subtract(debit.Amount).Amount < 0)
@@ -78,8 +57,7 @@ public sealed class WithdrawUseCase : IWithdrawUseCase
                 return;
             }
 
-            await Withdraw(withdrawAccount, debit)
-                .ConfigureAwait(false);
+            await Withdraw(withdrawAccount, debit).ConfigureAwait(false);
 
             _outputPort.Ok(debit, withdrawAccount);
             return;
@@ -92,11 +70,11 @@ public sealed class WithdrawUseCase : IWithdrawUseCase
     {
         account.Withdraw(debit);
 
-        await _accountRepository
+        await accountRepository
             .Update(account, debit)
             .ConfigureAwait(false);
 
-        await _unitOfWork
+        await unitOfWork
             .Save()
             .ConfigureAwait(false);
     }

@@ -10,29 +10,18 @@ using Domain.ValueObjects;
 using Services;
 
 /// <inheritdoc />
-public sealed class DepositValidationUseCase : IDepositUseCase
+public sealed class DepositValidationUseCase(
+    IDepositUseCase useCase,
+    Notification notification)
+    : IDepositUseCase
 {
-    private readonly Notification _notification;
-    private readonly IDepositUseCase _useCase;
-    private IOutputPort _outputPort;
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="DepositValidationUseCase" /> class.
-    /// </summary>
-    /// <param name="useCase"></param>
-    /// <param name="notification"></param>
-    public DepositValidationUseCase(IDepositUseCase useCase, Notification notification)
-    {
-        _useCase = useCase;
-        _notification = notification;
-        _outputPort = new DepositPresenter();
-    }
+    private IOutputPort _outputPort = new DepositPresenter();
 
     /// <inheritdoc />
     public void SetOutputPort(IOutputPort outputPort)
     {
         _outputPort = outputPort;
-        _useCase.SetOutputPort(outputPort);
+        useCase.SetOutputPort(outputPort);
     }
 
     /// <inheritdoc />
@@ -40,8 +29,7 @@ public sealed class DepositValidationUseCase : IDepositUseCase
     {
         if (accountId == Guid.Empty)
         {
-            _notification
-                .Add(nameof(accountId), "AccountId is required.");
+            notification.Add(nameof(accountId), "AccountId is required.");
         }
 
         if (currency != Currency.Dollar.Code &&
@@ -51,25 +39,21 @@ public sealed class DepositValidationUseCase : IDepositUseCase
             currency != Currency.Real.Code &&
             currency != Currency.Krona.Code)
         {
-            _notification
-                .Add(nameof(currency), "Currency is required.");
+            notification.Add(nameof(currency), "Currency is required.");
         }
 
         if (amount <= 0)
         {
-            _notification
-                .Add(nameof(amount), "Amount should be positive.");
+            notification.Add(nameof(amount), "Amount should be positive.");
         }
 
-        if (_notification
-            .IsInvalid)
+        if (notification.IsInvalid)
         {
-            _outputPort
-                .Invalid();
+            _outputPort.Invalid();
             return;
         }
 
-        await _useCase
+        await useCase
             .Execute(accountId, amount, currency)
             .ConfigureAwait(false);
     }

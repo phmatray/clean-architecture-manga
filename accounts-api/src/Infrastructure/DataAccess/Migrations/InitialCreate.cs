@@ -61,31 +61,28 @@ public partial class InitialCreate : Migration
 
         migrationBuilder.InsertData(
             "Account",
-            new[] { "AccountId", "Currency", "ExternalUserId" },
-            new object[]
-            {
-                    new Guid("4c510cfe-5d61-4a46-a3d9-c4313426655f"), "USD", "197d0438-e04b-453d-b5de-eca05960c6ae"
-            });
+            ["AccountId", "Currency", "ExternalUserId"],
+            [
+                new Guid("4c510cfe-5d61-4a46-a3d9-c4313426655f"), "USD", "197d0438-e04b-453d-b5de-eca05960c6ae"
+            ]);
 
         migrationBuilder.InsertData(
             "Credit",
-            new[] { "CreditId", "AccountId", "Currency", "TransactionDate", "Value" },
-            new object[]
-            {
-                    new Guid("7bf066ba-379a-4e72-a59b-9755fda432ce"),
+            ["CreditId", "AccountId", "Currency", "TransactionDate", "Value"],
+            [
+                new Guid("7bf066ba-379a-4e72-a59b-9755fda432ce"),
                     new Guid("4c510cfe-5d61-4a46-a3d9-c4313426655f"), "USD",
                     new DateTime(2020, 8, 21, 6, 43, 4, 92, DateTimeKind.Utc).AddTicks(7795), 400m
-            });
+            ]);
 
         migrationBuilder.InsertData(
             "Debit",
-            new[] { "DebitId", "AccountId", "Currency", "TransactionDate", "Value" },
-            new object[]
-            {
-                    new Guid("31ade963-bd69-4afb-9df7-611ae2cfa651"),
+            ["DebitId", "AccountId", "Currency", "TransactionDate", "Value"],
+            [
+                new Guid("31ade963-bd69-4afb-9df7-611ae2cfa651"),
                     new Guid("4c510cfe-5d61-4a46-a3d9-c4313426655f"), "USD",
                     new DateTime(2020, 8, 21, 6, 43, 4, 93, DateTimeKind.Utc).AddTicks(301), 400m
-            });
+            ]);
 
         migrationBuilder.CreateIndex(
             "IX_Credit_AccountId",

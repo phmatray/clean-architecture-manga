@@ -10,8 +10,8 @@ using Services;
 
 /// <inheritdoc />
 public sealed class OpenAccountValidationUseCase(
-        IOpenAccountUseCase useCase,
-        Notification notification)
+    IOpenAccountUseCase useCase,
+    Notification notification)
     : IOpenAccountUseCase
 {
     private IOutputPort _outputPort = new OpenAccountPresenter();
@@ -33,21 +33,17 @@ public sealed class OpenAccountValidationUseCase(
             currency != Currency.Real.Code &&
             currency != Currency.Krona.Code)
         {
-            notification
-                .Add(nameof(currency), "Currency is required.");
+            notification.Add(nameof(currency), "Currency is required.");
         }
 
         if (amount <= 0)
         {
-            notification
-                .Add(nameof(amount), "Amount should be positive.");
+            notification.Add(nameof(amount), "Amount should be positive.");
         }
 
-        if (notification
-            .IsInvalid)
+        if (notification.IsInvalid)
         {
-            _outputPort
-                .Invalid();
+            _outputPort.Invalid();
             return;
         }
 

@@ -6,16 +6,11 @@ using ViewModels;
 /// <summary>
 ///     The response for Registration.
 /// </summary>
-public sealed class OpenAccountResponse
+public sealed class OpenAccountResponse(AccountModel accountModel)
 {
-    /// <summary>
-    ///     The Response Registration Constructor.
-    /// </summary>
-    public OpenAccountResponse(AccountModel accountModel) => Account = accountModel;
-
     /// <summary>
     ///     Gets customer.
     /// </summary>
     [Required]
-    public AccountModel Account { get; }
+    public AccountModel Account { get; } = accountModel;
 }

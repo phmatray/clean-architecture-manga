@@ -12,36 +12,18 @@ using Domain.ValueObjects;
 using Services;
 
 /// <inheritdoc />
-public sealed class DepositUseCase : IDepositUseCase
+public sealed class DepositUseCase(
+    IAccountRepository accountRepository,
+    IUnitOfWork unitOfWork,
+    IAccountFactory accountFactory,
+    ICurrencyExchange currencyExchange)
+    : IDepositUseCase
 {
-    private readonly IAccountFactory _accountFactory;
-    private readonly IAccountRepository _accountRepository;
-    private readonly ICurrencyExchange _currencyExchange;
-    private readonly IUnitOfWork _unitOfWork;
-    private IOutputPort _outputPort;
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="DepositUseCase" /> class.
-    /// </summary>
-    /// <param name="accountRepository">Account Repository.</param>
-    /// <param name="unitOfWork">Unit Of Work.</param>
-    /// <param name="accountFactory"></param>
-    /// <param name="currencyExchange"></param>
-    public DepositUseCase(
-        IAccountRepository accountRepository,
-        IUnitOfWork unitOfWork,
-        IAccountFactory accountFactory,
-        ICurrencyExchange currencyExchange)
-    {
-        _accountRepository = accountRepository;
-        _unitOfWork = unitOfWork;
-        _accountFactory = accountFactory;
-        _currencyExchange = currencyExchange;
-        _outputPort = new DepositPresenter();
-    }
+    private IOutputPort _outputPort = new DepositPresenter();
 
     /// <inheritdoc />
-    public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
+    public void SetOutputPort(IOutputPort outputPort)
+        => _outputPort = outputPort;
 
     /// <inheritdoc />
     public Task Execute(Guid accountId, decimal amount, string currency) =>
@@ -51,18 +33,18 @@ public sealed class DepositUseCase : IDepositUseCase
 
     private async Task Deposit(AccountId accountId, Money amount)
     {
-        IAccount account = await _accountRepository
+        IAccount account = await accountRepository
             .GetAccount(accountId)
             .ConfigureAwait(false);
 
         if (account is Account depositAccount)
         {
             Money convertedAmount =
-                await _currencyExchange
+                await currencyExchange
                     .Convert(amount, depositAccount.Currency)
                     .ConfigureAwait(false);
 
-            Credit credit = _accountFactory
+            Credit credit = accountFactory
                 .NewCredit(depositAccount, convertedAmount, DateTime.Now);
 
             await Deposit(depositAccount, credit)
@@ -79,11 +61,11 @@ public sealed class DepositUseCase : IDepositUseCase
     {
         account.Deposit(credit);
 
-        await _accountRepository
+        await accountRepository
             .Update(account, credit)
             .ConfigureAwait(false);
 
-        await _unitOfWork
+        await unitOfWork
             .Save()
             .ConfigureAwait(false);
     }

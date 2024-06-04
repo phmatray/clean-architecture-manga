@@ -30,7 +30,8 @@ public sealed class CurrencyExchangeService(IHttpClientFactory httpClientFactory
         HttpClient httpClient = httpClientFactory.CreateClient(HttpClientName);
         var requestUri = new Uri(ExchangeUrl);
 
-        HttpResponseMessage response = await httpClient.GetAsync(requestUri)
+        HttpResponseMessage response = await httpClient
+            .GetAsync(requestUri)
             .ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
